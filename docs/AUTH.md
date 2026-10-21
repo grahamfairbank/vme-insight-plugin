@@ -90,7 +90,18 @@ The certificate must be **trusted by your users' browsers**. A framed page can't
   ```bash
   docker compose --profile https cp https:/data/caddy/pki/authorities/local/root.crt vme-insight-root.crt
   ```
-  On Windows, import it into the **Local Machine → Trusted Root Certification Authorities** store, for example in PowerShell as Administrator: `Import-Certificate -FilePath .\vme-insight-root.crt -CertStoreLocation Cert:\LocalMachine\Root`. Windows' import wizard on *Automatically select the certificate store* files it under *Intermediate Certification Authorities*, where browsers still reject it. Firefox has its own certificate list. Restart the browser afterwards.
+  On **Windows** (Edge, Chrome), use PowerShell **as Administrator**, in the folder holding the file. Don't double-click the certificate to install it: Windows' import wizard files it under *Intermediate Certification Authorities*, where browsers still reject it.
+  ```powershell
+  # Trust the vme-insight root for every user on this machine
+  Import-Certificate -FilePath .\vme-insight-root.crt -CertStoreLocation Cert:\LocalMachine\Root
+
+  # Check: should list "Caddy Local Authority - <year> ECC Root"
+  Get-ChildItem Cert:\LocalMachine\Root | Where-Object Subject -like '*Caddy Local Authority*' | Format-List Subject, Thumbprint, NotAfter
+
+  # If it was imported before by double-clicking the file, remove the copy Windows filed as an intermediate
+  Get-ChildItem Cert:\LocalMachine\CA, Cert:\CurrentUser\CA | Where-Object Subject -like '*Caddy Local Authority*' | Remove-Item
+  ```
+  Then close every browser window and reopen it. On macOS use Keychain Access (System, **Always Trust**); Firefox keeps its own certificate list (Settings → Privacy & Security → Certificates → Authorities → Import).
 
   For a quick lab test, opening the Grafana URL in its own tab and accepting the warning also works, until the browser is restarted.
 
