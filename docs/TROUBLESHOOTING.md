@@ -8,6 +8,7 @@ Most problems are between the browser and Grafana, not in VME. Start with the br
 |---|---|
 | **vme-insight Grafana URL** is blank or not a plain http(s) URL | Set it ([CONFIGURATION](CONFIGURATION.md)). URLs with a query string (`?`), fragment (`#`) or user name are rejected. |
 | **Only show to roles with the vme-insight permission** is on and your role lacks it | Grant **vme-insight: View dashboards → Read** to the role, or untick the setting. |
+| It's there but out of sight | Pages with many tabs (hosts) put extra tabs in the **▼** menu at the end of the tab row. |
 | Instance page with no VM yet, or not a VME VM | Expected. Open the VM under Infrastructure → Compute instead. |
 | Plugin not loaded | **Administration → Integrations → Plugins**: status should be **loaded** and enabled. Otherwise see [Plugin won't load](#plugin-wont-load). |
 
@@ -17,7 +18,7 @@ Most problems are between the browser and Grafana, not in VME. Start with the br
 |---|---|---|
 | `Mixed Content: ... requested an insecure frame 'http://...'` | Grafana URL is http, VME is https | Serve Grafana over https and update the URL ([AUTH](AUTH.md#2-https-in-front-of-grafana)). The tab also shows a warning. |
 | `Refused to display ... in a frame because it set 'X-Frame-Options' to 'deny'` | Grafana embedding is off | vme-insight `.env`: `GRAFANA_ALLOW_EMBEDDING=true`, then `docker compose up -d grafana`. |
-| `Refused to frame ... because it violates ... frame-src` | VME's policy doesn't list the Grafana origin | Check the URL setting is saved and reload the page. If it persists after changing the URL, disable and re-enable the plugin so VME picks up the new policy. |
+| `Refused to frame ... because it violates ... default-src` or `frame-src` (Chrome and Edge show "This content is blocked. Contact the site owner") | VME's page policy doesn't list the Grafana origin | Use plugin 0.1.1 or later: 0.1.0 could return no policy where VME asks for it. Check the URL setting is saved, then reload the page. If it persists after changing the URL, disable and re-enable the plugin. |
 | `net::ERR_CERT_AUTHORITY_INVALID` or the request never completes | Browser doesn't trust Grafana's certificate; frames can't show the warning | Install vme-insight's root certificate as trusted ([AUTH](AUTH.md#2-https-in-front-of-grafana)), or use your own certificate. In a lab, opening the Grafana URL in its own tab and accepting the warning works until the browser restarts. |
 | `403 Forbidden` from the frame | Your workstation's network isn't in vme-insight's `HTTPS_ALLOW` | Add it to `HTTPS_ALLOW` and `docker compose --profile https up -d https`. |
 | Request times out | Browser can't reach Grafana (firewall, VPN, DNS) | Open the Grafana URL directly from the same machine. Check the network allowlist in [AUTH](AUTH.md#3-restrict-who-can-reach-grafana). |

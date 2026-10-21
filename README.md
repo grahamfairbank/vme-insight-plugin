@@ -72,13 +72,13 @@ Full walkthrough: **[docs/INSTALL.md](docs/INSTALL.md)**.
 
 | Component | Version | Status |
 |---|---|---|
-| VME manager | 9.1.0.1 | Pending: built against its Plugin API 1.5.0; install not yet done. Embedding checked against its live Content-Security-Policy: frames load with the plugin's `frame-src` and are refused without it. |
+| VME manager | 9.1.0.1 | Installed (plugin 0.1.1). Host, VM, instance and cluster tabs show the right dashboard; the frame is allowed by the plugin's `frame-src`; the dashboard is offered in **Dashboards to Display**. |
 | Plugin API (`morpheus-plugin-api`) | 1.5.0 | Builds; unit tests pass |
 | vme-insight | 0.1 | Dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) checked against its dashboards |
 | Grafana | 11.5.2 (as shipped by vme-insight) | Host, VM, cluster and single-panel URLs render in a cross-site frame with anonymous Viewer access behind vme-insight's https front end |
-| Browsers | Chromium (headless) | Embedding test passes. Firefox and Safari pending lab test. |
+| Browsers | Chromium (headless) | Tabs load. Your own browser, Firefox and Safari not yet confirmed. |
 
-This table will be updated after the first lab install.
+Not yet checked in the lab: the home dashboard widget once selected, the corner link, and the role permission.
 
 ## VME reference documentation
 

@@ -51,11 +51,32 @@ class VmeInsightPlugin extends Plugin {
 	/** Current settings. Read on every render so changes apply without reloading the plugin. */
 	InsightSettings loadSettings() {
 		try {
-			return InsightSettings.fromJson(morpheus.getSettings(this).blockingGet())
-		} catch (Exception e) {
-			log.warn("vme-insight: could not read plugin settings: ${e.message}")
+			InsightSettings s = InsightSettings.fromJson(morpheus.getSettings(this).blockingGet())
+			if (s.origin) lastOrigin = s.origin
+			return s
+		} catch (Throwable e) {
+			log.warn("vme-insight: could not read plugin settings: ${e}")
 			return InsightSettings.fromJson(null)
 		}
+	}
+
+	/** Grafana origin from the last successful settings read; see frameOrigin(). */
+	private volatile String lastOrigin
+
+	/**
+	 * The Grafana origin for the Content-Security-Policy frame-src. VME may ask for the policy where
+	 * plugin settings can't be read, so fall back to the origin seen on the last successful read.
+	 */
+	String frameOrigin() {
+		String origin = null
+		try {
+			origin = loadSettings().origin
+		} catch (Throwable e) {
+			log.warn("vme-insight: frame-src from settings failed: ${e}")
+		}
+		String result = origin ?: lastOrigin
+		log.debug("vme-insight: frame-src ${result ?: '(none)'} (settings: ${origin ?: 'unavailable'})")
+		return result
 	}
 
 	/** Whether this user may see vme-insight content under the current settings. */

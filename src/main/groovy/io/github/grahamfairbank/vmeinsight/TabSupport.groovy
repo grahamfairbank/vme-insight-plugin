@@ -12,7 +12,7 @@ class TabSupport {
 
 	/** Lets VME's Content-Security-Policy accept frames from the configured Grafana origin. */
 	static ContentSecurityPolicy contentSecurityPolicy(VmeInsightPlugin plugin) {
-		String origin = plugin.loadSettings().origin
+		String origin = plugin.frameOrigin()
 		if (!origin) return null
 		ContentSecurityPolicy csp = new ContentSecurityPolicy()
 		csp.frameSrc = origin

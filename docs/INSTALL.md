@@ -48,6 +48,8 @@ Every setting is described in [CONFIGURATION](CONFIGURATION.md). The defaults su
 
 ### Verify
 
+Pages with many tabs (hosts, for example) put the extra ones in the **▼** menu at the end of the tab row; look for vme-insight there.
+
 1. Open **Infrastructure → Clusters** and pick a cluster. A **vme-insight** tab appears beside VME's own tabs, showing the **VME Overview** dashboard for that cluster.
 2. Open a host under **Infrastructure → Compute → Hosts**. The tab shows **VME Hosts** with that host selected.
 3. Open a VM under **Infrastructure → Compute → Virtual Machines**, or an instance under **Provisioning → Instances**. The tab shows **VME Virtual Machines** for it.
@@ -62,7 +64,7 @@ The plugin adds a **vme-insight** dashboard with one widget: a row of tiles from
 VME shows the dashboards an administrator selects:
 
 1. Go to **Administration → Settings → Appliance** ([Appliance settings](https://github.com/HewlettPackard/morpheus-docs/blob/dev-9.1/administration/settings/appliance.rst)).
-2. In **Dashboards to Display**, add **vme-insight** alongside the standard dashboard, and drag it to where you want it.
+2. In **Dashboards to Display**, add **vme-insight** (VME lists it as *Vme-insight*) alongside the standard dashboard, and drag it to where you want it.
 3. Save, and open the home page.
 
 The widget follows VME's **Infrastructure: Clusters** permission: users whose role can read clusters see it. Pick other tiles with the **Home dashboard panel IDs** setting ([CONFIGURATION](CONFIGURATION.md#home-dashboard-panel-ids)).

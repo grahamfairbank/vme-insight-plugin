@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.1
+
+* Fixed: on VME 9.1.0.1 the tabs showed "This content is blocked" because the page's Content-Security-Policy had no `frame-src` for Grafana. The plugin now falls back to the Grafana origin from its last successful settings read when VME asks for the policy.
+* First lab install on VME 9.1.0.1: host, VM, instance and cluster tabs checked.
+
+## 0.1.0
 
 First version, built against Plugin API 1.5.0 (VME 9.1).
 
