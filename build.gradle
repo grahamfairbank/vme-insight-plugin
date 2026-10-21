@@ -1,0 +1,94 @@
+// vme-insight-plugin: shows vme-insight's Grafana dashboards inside the HPE VM Essentials UI.
+// Layout follows the Morpheus plugin generator: Gradle + shadow "fat jar" + asset pipeline +
+// morpheus-plugin-gradle. Build with ./gradlew shadowJar (or tools/build.sh, which needs only Docker).
+
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
+	}
+	dependencies {
+		classpath "com.github.johnrengelman:shadow:$shadowVersion"
+		classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
+		classpath "com.morpheusdata:morpheus-plugin-gradle:$morphPluginGradleVersion"
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'asset-pipeline'
+apply plugin: 'com.morpheusdata.morpheus-plugin-gradle'
+
+group = 'io.github.grahamfairbank'
+
+java {
+	// VME 9.1 runs plugins on a newer JVM; Plugin API 1.5.0 itself targets Java 11.
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	provided
+}
+
+dependencies {
+	// Supplied by VME at runtime: never bundled into the plugin jar.
+	provided "com.morpheusdata:morpheus-plugin-api:$morphPluginApiVersion"
+	provided "org.codehaus.groovy:groovy:$groovyVersion"
+	provided "org.codehaus.groovy:groovy-json:$groovyVersion"
+	provided "io.reactivex.rxjava3:rxjava:3.1.7"
+	provided "org.slf4j:slf4j-api:$slf4jVersion"
+
+	testImplementation "com.morpheusdata:morpheus-plugin-api:$morphPluginApiVersion"
+	testImplementation "org.codehaus.groovy:groovy:$groovyVersion"
+	testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
+	testImplementation "io.reactivex.rxjava3:rxjava:3.1.7"
+	testImplementation "org.spockframework:spock-core:$spockVersion"
+	testRuntimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
+}
+
+sourceSets {
+	main {
+		compileClasspath += configurations.provided
+	}
+}
+
+assets {
+	packagePlugin = false
+}
+
+jar {
+	manifest {
+		attributes(
+			'Plugin-Class': 'io.github.grahamfairbank.vmeinsight.VmeInsightPlugin',
+			'Plugin-Version': project.version,
+			'Morpheus-Name': 'vme-insight',
+			'Morpheus-Organization': 'vme-insight community project',
+			'Morpheus-Code': 'vme-insight-plugin',
+			'Morpheus-Description': 'Shows vme-insight Grafana dashboards on host, VM, instance and cluster pages. Community project, not affiliated with HPE.',
+			'Morpheus-Logo': 'assets/vme-insight.svg',
+			'Morpheus-Logo-Dark': 'assets/vme-insight.svg',
+			'Morpheus-Labels': 'Plugin, Monitoring, Grafana, Dashboard, Tab',
+			'Morpheus-Repo': 'https://github.com/grahamfairbank/vme-insight-plugin',
+			'Morpheus-Min-Appliance-Version': '9.1.0'
+		)
+	}
+}
+
+tasks.withType(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+	// Nothing needs bundling today; keep the plugin jar small and the name predictable.
+	archiveClassifier.set('')
+	archiveBaseName.set('vme-insight-plugin')
+}
+
+test {
+	useJUnitPlatform()
+	testLogging { exceptionFormat = 'full' }
+}
+
+tasks.assemble.dependsOn tasks.shadowJar

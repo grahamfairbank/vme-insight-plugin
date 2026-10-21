@@ -1,0 +1,20 @@
+{{!-- vme-insight home dashboard widget: single Grafana panels side by side. --}}
+<div id="dashboard-item-vme-insight-summary" class="vme-insight-widget" style="width: 100%; box-sizing: border-box;">
+	<div class="dashboard-widget-header" style="display: flex; justify-content: space-between; align-items: baseline;">
+		<span class="dashboard-widget-title">vme-insight</span>
+		{{#if configured}}<a href="{{openUrl}}" target="_blank" rel="noopener noreferrer">Open &#8599;</a>{{/if}}
+	</div>
+	{{#if configured}}
+		{{#if insecure}}
+		<p class="text-warning">The vme-insight URL uses http; browsers block it inside VME's https pages.</p>
+		{{/if}}
+		<div style="display: flex; flex-wrap: wrap; gap: 6px;">
+			{{#each panels}}
+			<iframe src="{{this}}" title="vme-insight panel" width="220" height="130" frameborder="0" loading="lazy"
+				referrerpolicy="no-referrer" style="flex: 1 1 200px; min-width: 180px; height: 130px; border: 0;"></iframe>
+			{{/each}}
+		</div>
+	{{else}}
+		<p class="text-muted">Set the vme-insight Grafana URL in Administration &gt; Integrations &gt; Plugins &gt; vme-insight.</p>
+	{{/if}}
+</div>
