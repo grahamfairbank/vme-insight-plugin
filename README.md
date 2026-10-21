@@ -39,7 +39,7 @@ Each tab also has an **Open in vme-insight ↗** link that opens the same dashbo
 
 ## Quick start
 
-1. In vme-insight, make Grafana embeddable and reachable over **https** with anonymous Viewer access, restricted to your admin networks. Details and exact settings: [AUTH](docs/AUTH.md#recommended-setup).
+1. In vme-insight's `.env`, make Grafana embeddable and reachable over **https** with anonymous Viewer access, restricted to your admin networks, and start its https front end. Exact settings: [AUTH](docs/AUTH.md#recommended-setup).
 2. Build the plugin (needs only Docker) or download a release jar:
    ```bash
    git clone https://github.com/grahamfairbank/vme-insight-plugin && cd vme-insight-plugin
@@ -72,11 +72,11 @@ Full walkthrough: **[docs/INSTALL.md](docs/INSTALL.md)**.
 
 | Component | Version | Status |
 |---|---|---|
-| VME manager | 9.1.0.1 | Pending: built against its Plugin API 1.5.0; install and lab test not yet done |
+| VME manager | 9.1.0.1 | Pending: built against its Plugin API 1.5.0; install not yet done. Embedding checked against its live Content-Security-Policy: frames load with the plugin's `frame-src` and are refused without it. |
 | Plugin API (`morpheus-plugin-api`) | 1.5.0 | Builds; unit tests pass |
 | vme-insight | 0.1 | Dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) checked against its dashboards |
-| Grafana | 11.5.2 (as shipped by vme-insight) | Kiosk and single-panel URLs as documented by Grafana |
-| Browsers | | Pending lab test |
+| Grafana | 11.5.2 (as shipped by vme-insight) | Host, VM, cluster and single-panel URLs render in a cross-site frame with anonymous Viewer access behind vme-insight's https front end |
+| Browsers | Chromium (headless) | Embedding test passes. Firefox and Safari pending lab test. |
 
 This table will be updated after the first lab install.
 

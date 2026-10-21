@@ -46,7 +46,7 @@ What you give up, and how to limit it:
 | Trade-off | Mitigation |
 |---|---|
 | No per-user identity in Grafana: everyone on the allowed networks sees every vme-insight dashboard, for every cluster, regardless of their VME role or group access | Restrict Grafana to admin networks (VPN, management VLAN). In VME, tick **Only show to roles with the vme-insight permission** so only chosen roles see the tabs (this hides the tabs; it doesn't secure Grafana). |
-| A Viewer can send its own read queries to the data sources through Grafana's API, not only view panels | vme-insight's Grafana database user can only `SELECT`. The data is the same inventory the dashboards show (host names, IPs, VM names, user names in activity). Use a dedicated Grafana organisation (below) so anonymous viewers never see anything else added to Grafana. |
+| A Viewer can list data sources (names and types, no passwords) and send its own read queries to them through Grafana's API, not only view panels | vme-insight's Grafana database user can only `SELECT`. The data is the same inventory the dashboards show (host names, IPs, VM names, user names in activity). Use a dedicated Grafana organisation (below) so anonymous viewers never see anything else added to Grafana. |
 | Anyone who can reach the URL can read it without a password | The network restriction is the control. Don't publish this Grafana to the internet. |
 | Grafana's version is visible | `hide_version = true` for anonymous users. |
 
@@ -54,52 +54,56 @@ Choose **B** instead if your security policy requires named users for monitoring
 
 ## Recommended setup
 
-Three pieces: Grafana settings, https in front of Grafana, and a network restriction. Everything below is a vme-insight change; the plugin needs only the final URL.
+Three pieces: Grafana settings, https in front of Grafana, and a network restriction. vme-insight has all three as `.env` options (from the version after 0.1.0; see its [CONFIGURATION → https front end](https://github.com/grahamfairbank/vme-insight/blob/main/docs/CONFIGURATION.md#https-front-end)).
 
 ### 1. Grafana settings
 
-These are Grafana's standard environment variables. vme-insight 0.1 exposes `GRAFANA_ALLOW_EMBEDDING` in `.env`; the others can go in a `docker-compose.override.yml` next to vme-insight's `docker-compose.yml`, which Compose merges automatically:
+In vme-insight's `.env`:
 
-```yaml
-# docker-compose.override.yml (vme-insight): Grafana for the VME plugin
-services:
-  grafana:
-    environment:
-      GF_SECURITY_ALLOW_EMBEDDING: "true"          # or GRAFANA_ALLOW_EMBEDDING=true in .env
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_NAME: "Main Org."      # must match an existing organisation's name exactly
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
-      GF_AUTH_ANONYMOUS_HIDE_VERSION: "true"
-      GF_SERVER_ROOT_URL: "https://vme-insight.example.com/"
-      GF_SECURITY_COOKIE_SECURE: "true"            # once Grafana is only reached over https
+```bash
+GRAFANA_ALLOW_EMBEDDING=true                 # no X-Frame-Options: deny
+GRAFANA_ANONYMOUS=true                       # read-only Viewer without signing in
+GRAFANA_ANONYMOUS_ORG="Main Org."            # must match an organisation's name exactly
+GRAFANA_BIND=127.0.0.1                       # Grafana's own port only on the Docker host
+GRAFANA_ROOT_URL=https://vme-insight.example.com:3443/
+GRAFANA_COOKIE_SECURE=true
 ```
 
-Then `docker compose up -d grafana`. The admin account still signs in as before (top right → **Sign in**) for anything beyond viewing.
+`Main Org.` is Grafana's default organisation, where vme-insight provisions its dashboards. Admins still sign in (top right → **Sign in**) for anything beyond viewing.
 
-`Main Org.` is Grafana's default organisation, where vme-insight provisions its dashboards. Check yours under **Administration → General → Organizations** in Grafana.
-
-**Hardening: a dedicated organisation.** Create an organisation such as `VME viewers`, provision vme-insight's data sources and dashboards into it as well, and point `GF_AUTH_ANONYMOUS_ORG_NAME` at it. Set the plugin's **Grafana organisation ID** to its id. Anonymous viewers then see only what's in that organisation, even if someone later adds other dashboards or data sources to Main Org.
+**Hardening: a dedicated organisation.** Create an organisation such as `VME viewers`, provision vme-insight's data sources and dashboards into it as well, and point `GRAFANA_ANONYMOUS_ORG` at it. Set the plugin's **Grafana organisation ID** to its id. Anonymous viewers then see only what's in that organisation, even if someone later adds other dashboards or data sources to Main Org.
 
 ### 2. https in front of Grafana
 
-VME is served over https, and browsers block `http://` frames inside https pages (mixed content). Put a TLS reverse proxy in front of Grafana, as vme-insight's [SECURITY](https://github.com/grahamfairbank/vme-insight/blob/main/docs/SECURITY.md#network-exposure) already advises when Grafana is reachable beyond a trusted network.
+VME is served over https, and browsers block `http://` frames inside https pages (mixed content). vme-insight's optional front end (Caddy) adds https:
 
-The certificate must be **trusted by your users' browsers**. A framed page can't show a certificate warning; it just stays blank. Use a certificate from your internal CA or a public one. In a lab with a self-signed certificate, open the Grafana URL in its own tab once and accept the warning; the frame works for the rest of that browser session.
-
-A minimal [Caddy](https://caddyserver.com/docs/caddyfile) example, with the network restriction from step 3 built in:
-
+```bash
+HTTPS_PORT=3443
+HTTPS_HOSTNAME=vme-insight.example.com       # the name users type
+HTTPS_TLS=internal                           # or "/certs/<cert>.pem /certs/<key>.pem"
 ```
-vme-insight.example.com {
-    tls /certs/vme-insight.crt /certs/vme-insight.key
-    @blocked not remote_ip 10.20.0.0/16 192.168.13.0/24   # your admin networks
-    respond @blocked "Forbidden" 403
-    reverse_proxy grafana:3000
-}
-```
+
+The certificate must be **trusted by your users' browsers**. A framed page can't show a certificate warning; it just stays blank.
+
+* **Your own certificate** (internal or public CA): put it in vme-insight's `https/certs/` and set `HTTPS_TLS`.
+* **`internal`**: the front end runs its own small CA. Export its root certificate and install it as a trusted root on each admin workstation:
+  ```bash
+  docker compose --profile https cp https:/data/caddy/pki/authorities/local/root.crt vme-insight-root.crt
+  ```
+  For a quick lab test, opening the Grafana URL in its own tab and accepting the warning also works, until the browser is restarted.
 
 ### 3. Restrict who can reach Grafana
 
-Allow only the networks your VME admins work from: in the reverse proxy as above, on the host firewall, or both. Then stop publishing Grafana's own port (`GRAFANA_PORT`) beyond `127.0.0.1`, so the proxy is the only way in.
+```bash
+HTTPS_ALLOW="10.20.0.0/16 192.168.13.0/24"    # networks your VME admins work from
+```
+
+Everyone else gets `403 Forbidden`. With `GRAFANA_BIND=127.0.0.1`, the front end is the only way in from other machines. Then:
+
+```bash
+docker compose up -d grafana
+docker compose --profile https up -d https
+```
 
 ### 4. Point the plugin at it
 
@@ -107,13 +111,13 @@ In VME: **Administration → Integrations → Plugins → vme-insight** (pencil)
 
 ### Check it
 
-From a machine on an allowed network, in a private browser window (no Grafana session):
+From a machine on an allowed network (no Grafana session):
 
 ```bash
-curl -sI https://vme-insight.example.com/d/vme-overview | grep -i -E '^HTTP|x-frame-options'
+curl -sI https://vme-insight.example.com:3443/d/vme-overview | grep -i -E '^HTTP|x-frame-options'
 ```
 
-You should get `HTTP/2 200` and **no** `X-Frame-Options` header. A `302` to `/login` means anonymous access is off; `X-Frame-Options: deny` means embedding is off.
+You should get `HTTP/2 200` and **no** `X-Frame-Options` header. From a machine outside `HTTPS_ALLOW` you should get `403`. A `302` to `/login` means anonymous access is off; `X-Frame-Options: deny` means embedding is off.
 
 ## What the plugin itself exposes
 

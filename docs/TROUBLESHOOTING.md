@@ -18,15 +18,16 @@ Most problems are between the browser and Grafana, not in VME. Start with the br
 | `Mixed Content: ... requested an insecure frame 'http://...'` | Grafana URL is http, VME is https | Serve Grafana over https and update the URL ([AUTH](AUTH.md#2-https-in-front-of-grafana)). The tab also shows a warning. |
 | `Refused to display ... in a frame because it set 'X-Frame-Options' to 'deny'` | Grafana embedding is off | vme-insight `.env`: `GRAFANA_ALLOW_EMBEDDING=true`, then `docker compose up -d grafana`. |
 | `Refused to frame ... because it violates ... frame-src` | VME's policy doesn't list the Grafana origin | Check the URL setting is saved and reload the page. If it persists after changing the URL, disable and re-enable the plugin so VME picks up the new policy. |
-| `net::ERR_CERT_AUTHORITY_INVALID` or the request never completes | Browser doesn't trust Grafana's certificate; frames can't show the warning | Use a trusted certificate. In a lab, open the Grafana URL in its own tab once and accept the warning. |
+| `net::ERR_CERT_AUTHORITY_INVALID` or the request never completes | Browser doesn't trust Grafana's certificate; frames can't show the warning | Install vme-insight's root certificate as trusted ([AUTH](AUTH.md#2-https-in-front-of-grafana)), or use your own certificate. In a lab, opening the Grafana URL in its own tab and accepting the warning works until the browser restarts. |
+| `403 Forbidden` from the frame | Your workstation's network isn't in vme-insight's `HTTPS_ALLOW` | Add it to `HTTPS_ALLOW` and `docker compose --profile https up -d https`. |
 | Request times out | Browser can't reach Grafana (firewall, VPN, DNS) | Open the Grafana URL directly from the same machine. Check the network allowlist in [AUTH](AUTH.md#3-restrict-who-can-reach-grafana). |
 
 ## Tab shows Grafana's sign-in page, or signs in and comes back
 
 Anonymous access is off, or set to an organisation that doesn't exist. A sign-in inside the frame won't stick ([why](AUTH.md#why-signing-in-inside-the-frame-doesnt-work)).
 
-* Set `GF_AUTH_ANONYMOUS_ENABLED=true` and `GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer`.
-* `GF_AUTH_ANONYMOUS_ORG_NAME` must match an organisation name exactly, including the full stop in `Main Org.`.
+* vme-insight `.env`: `GRAFANA_ANONYMOUS=true`, then `docker compose up -d grafana`.
+* `GRAFANA_ANONYMOUS_ORG` must match an organisation name exactly, including the full stop in `Main Org.`.
 * Check: `curl -sI https://<grafana>/d/vme-overview` returns `200`, not `302`.
 
 ## Tab shows "Dashboard not found"
