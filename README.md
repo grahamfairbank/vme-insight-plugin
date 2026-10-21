@@ -82,7 +82,7 @@ Upgrade vme-insight first when a plugin release needs a newer one.
 |---|---|---|
 | VME manager | 9.1.0.1 | Installed (plugin 0.1.2). Host, VM, instance and cluster tabs show the right dashboard; the frame is allowed by the plugin's `frame-src`; the dashboard is offered in **Dashboards to Display**. |
 | Plugin API (`morpheus-plugin-api`) | 1.5.0 | Builds; unit tests pass |
-| vme-insight | 0.2.0 (unreleased) | Dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) and `vme-widget` tiles checked |
+| vme-insight | 0.2.0 | Dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) and `vme-widget` tiles checked |
 | Grafana | 11.5.2 (as shipped by vme-insight) | Host, VM, cluster and single-panel URLs render in a cross-site frame with anonymous Viewer access behind vme-insight's https front end |
 | Browsers | Edge 155 (Windows), Chromium (headless) | Tabs load once the certificate is trusted. Firefox and Safari not yet tested. |
 
