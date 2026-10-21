@@ -90,6 +90,8 @@ The certificate must be **trusted by your users' browsers**. A framed page can't
   ```bash
   docker compose --profile https cp https:/data/caddy/pki/authorities/local/root.crt vme-insight-root.crt
   ```
+  On Windows, import it into the **Local Machine → Trusted Root Certification Authorities** store, for example in PowerShell as Administrator: `Import-Certificate -FilePath .\vme-insight-root.crt -CertStoreLocation Cert:\LocalMachine\Root`. Windows' import wizard on *Automatically select the certificate store* files it under *Intermediate Certification Authorities*, where browsers still reject it. Firefox has its own certificate list. Restart the browser afterwards.
+
   For a quick lab test, opening the Grafana URL in its own tab and accepting the warning also works, until the browser is restarted.
 
 ### 3. Restrict who can reach Grafana

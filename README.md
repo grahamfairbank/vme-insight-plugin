@@ -76,7 +76,7 @@ Full walkthrough: **[docs/INSTALL.md](docs/INSTALL.md)**.
 | Plugin API (`morpheus-plugin-api`) | 1.5.0 | Builds; unit tests pass |
 | vme-insight | 0.1 | Dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) checked against its dashboards |
 | Grafana | 11.5.2 (as shipped by vme-insight) | Host, VM, cluster and single-panel URLs render in a cross-site frame with anonymous Viewer access behind vme-insight's https front end |
-| Browsers | Chromium (headless) | Tabs load. Your own browser, Firefox and Safari not yet confirmed. |
+| Browsers | Edge 155 (Windows), Chromium (headless) | Tabs load once the certificate is trusted. Firefox and Safari not yet tested. |
 
 Not yet checked in the lab: the home dashboard widget once selected, the corner link, and the role permission.
 
