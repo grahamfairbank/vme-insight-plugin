@@ -45,7 +45,7 @@ class InsightSettingsSpec extends Specification {
 
 		expect:
 		s.hostDashboard(7L) == 'https://g/d/vme-hosts?var-host=7&kiosk&orgId=2&theme=dark'
-		s.widgetPanelUrls()[0] == 'https://g/d-solo/vme-overview?panelId=2&orgId=2&theme=dark'
+		s.widgetPanelUrls()[0] == 'https://g/d-solo/vme-widget?panelId=1&orgId=2&theme=dark'
 	}
 
 	def "bad theme, org and height values fall back to defaults"() {
@@ -63,7 +63,13 @@ class InsightSettingsSpec extends Specification {
 	def "widget panels parse from a list and default when blank"() {
 		expect:
 		InsightSettings.fromJson('{"grafanaUrl":"https://g","widgetPanels":"36, 39 x 0 36"}').widgetPanels == [36, 39]
-		InsightSettings.fromJson('{"grafanaUrl":"https://g"}').widgetPanels == [2, 3, 4, 5, 8, 9, 36, 39]
+		InsightSettings.fromJson('{"grafanaUrl":"https://g"}').widgetPanels == [1, 2, 3, 4, 7, 8, 9, 12]
+	}
+
+	def "the 0.1.x default panel list is read as the new default"() {
+		expect:
+		InsightSettings.fromJson('{"grafanaUrl":"https://g","widgetPanels":"2,3,4,5,8,9,36,39"}').widgetPanels == [1, 2, 3, 4, 7, 8, 9, 12]
+		InsightSettings.fromJson('{"grafanaUrl":"https://g","widgetPanels":"2, 3, 4, 5, 8, 9, 36, 39"}').widgetPanels == [1, 2, 3, 4, 7, 8, 9, 12]
 	}
 
 	@Unroll

@@ -2,9 +2,11 @@
 
 A small **HPE Morpheus VM Essentials (VME)** UI plugin that shows [vme-insight](https://github.com/grahamfairbank/vme-insight)'s Grafana dashboards inside VME: a **vme-insight** tab on every host, VM, instance and cluster page, and an optional vme-insight home dashboard.
 
-vme-insight stays a standalone web site. This plugin is a thin companion: it holds no credentials, stores no data and makes no API calls. It builds the right dashboard URL for the page you're on and shows it in a frame.
+**An add-on to vme-insight, not a standalone product.** vme-insight is the main project: a complete monitoring site that works without this plugin. The plugin depends on it. It holds no credentials, stores no data and makes no API calls; it builds the right vme-insight dashboard URL for the page you're on and shows it in a frame.
 
-**Supported:** VME 9.1 and later (Plugin API 1.5.0), with vme-insight 0.1 or later.
+**Setup guide:** vme-insight's [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md) covers everything, in order, for both projects.
+
+**Supported:** VME 9.1 and later (Plugin API 1.5.0), with vme-insight 0.2.0 or later. See [Compatibility](#compatibility).
 
 > **Community project.** vme-insight-plugin is independent and community maintained. It is not affiliated with, endorsed, sponsored or supported by Hewlett Packard Enterprise, Morpheus Data, or any related organisation. See the [disclaimer](#disclaimer).
 
@@ -39,42 +41,48 @@ Each tab also has an **Open in vme-insight ↗** link that opens the same dashbo
 
 ## Quick start
 
-1. In vme-insight's `.env`, make Grafana embeddable and reachable over **https** with anonymous Viewer access, restricted to your admin networks, and start its https front end. Exact settings: [AUTH](docs/AUTH.md#recommended-setup).
-2. Build the plugin (needs only Docker) or download a release jar:
-   ```bash
-   git clone https://github.com/grahamfairbank/vme-insight-plugin && cd vme-insight-plugin
-   tools/build.sh                      # → build/libs/vme-insight-plugin-0.1.0.jar
-   ```
-3. In VME, go to **Administration → Integrations → Plugins**, click **Add**, and upload the jar.
-4. Edit the plugin (pencil icon) and set **vme-insight Grafana URL**, for example `https://vme-insight.example.com`.
-5. Open any host, VM or cluster. The **vme-insight** tab appears next to VME's own tabs.
+Follow vme-insight's **[VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md)** guide. In outline:
 
-Full walkthrough: **[docs/INSTALL.md](docs/INSTALL.md)**.
+1. In vme-insight, turn on the https front end and anonymous read-only viewing for your admin networks.
+2. Trust the front end's certificate on the admin workstations (on Windows, with PowerShell).
+3. In VME, **Administration → Integrations → Plugins → Add**, and upload the jar from [releases](https://github.com/grahamfairbank/vme-insight-plugin/releases) or `tools/build.sh`.
+4. Edit the plugin and set **vme-insight Grafana URL**.
+5. Open any host, VM, instance or cluster: the **vme-insight** tab is next to VME's own (on host pages, in the **▼** menu).
 
 ## Documentation
 
 | | |
 |---|---|
-| [INSTALL](docs/INSTALL.md) | Prerequisites, building, uploading, first configuration, the home dashboard, upgrades, removal |
+| [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md) *(in vme-insight)* | **The setup guide**: vme-insight's https and anonymous viewing, certificates, installing and configuring the plugin |
+| [INSTALL](docs/INSTALL.md) | Plugin-specific: requirements, building from source, upgrading, removing |
 | [CONFIGURATION](docs/CONFIGURATION.md) | Every plugin setting, the URLs it builds, matching vme-insight settings |
-| [AUTH](docs/AUTH.md) | How the browser gets into Grafana: options compared, recommended setup, security notes |
+| [AUTH](docs/AUTH.md) | How the browser gets into Grafana: options compared, why anonymous Viewer behind https, security notes |
 | [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | Blank tabs, sign-in loops, wrong dashboards, missing tabs |
 | [DEVELOPMENT](docs/DEVELOPMENT.md) | Project layout, building and testing, the VME plugin APIs used |
 
 ## Requirements
 
 * **VME 9.1 or later.** 9.1 ships Plugin API 1.5.0, which this plugin is built against ([9.1 compatibility](https://github.com/HewlettPackard/morpheus-docs/blob/dev-9.1/release_notes/compatibility.rst)).
-* **vme-insight 0.1 or later**, with its Grafana reachable from your users' browsers over **https**. Browsers block `http://` frames inside VME's `https://` pages.
+* **vme-insight 0.2.0 or later**, set up as in [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md): Grafana reachable from your users' browsers over **https**, without a sign-in. Browsers block `http://` frames inside VME's `https://` pages.
 * A VME role that can manage plugins (Administration → Integrations) to install it.
 * To build: Docker, or JDK 11+ with the included Gradle wrapper.
+
+## Compatibility
+
+| vme-insight-plugin | vme-insight | VME |
+|---|---|---|
+| 0.1.2 | 0.2.0 or later (home widget uses its `vme-widget` dashboard) | 9.1 or later |
+| 0.1.0 – 0.1.1 | 0.2.0 or later (https front end, anonymous viewing) | 9.1 or later |
+
+Upgrade vme-insight first when a plugin release needs a newer one.
 
 ## Tested versions
 
 | Component | Version | Status |
 |---|---|---|
-| VME manager | 9.1.0.1 | Installed (plugin 0.1.1). Host, VM, instance and cluster tabs show the right dashboard; the frame is allowed by the plugin's `frame-src`; the dashboard is offered in **Dashboards to Display**. |
+| VME manager | 9.1.0.1 | Installed (plugin 0.1.2). Host, VM, instance and cluster tabs show the right dashboard; the frame is allowed by the plugin's `frame-src`; the dashboard is offered in **Dashboards to Display**. |
 | Plugin API (`morpheus-plugin-api`) | 1.5.0 | Builds; unit tests pass |
-| vme-insight | 0.1 | Dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) checked against its dashboards |
+| vme-insight | 0.2.0 (unreleased) | Dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) and `vme-widget` tiles checked |
 | Grafana | 11.5.2 (as shipped by vme-insight) | Host, VM, cluster and single-panel URLs render in a cross-site frame with anonymous Viewer access behind vme-insight's https front end |
 | Browsers | Edge 155 (Windows), Chromium (headless) | Tabs load once the certificate is trusted. Firefox and Safari not yet tested. |
 

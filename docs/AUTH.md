@@ -54,94 +54,15 @@ Choose **B** instead if your security policy requires named users for monitoring
 
 ## Recommended setup
 
-Three pieces: Grafana settings, https in front of Grafana, and a network restriction. vme-insight has all three as `.env` options (from the version after 0.1.0; see its [CONFIGURATION → https front end](https://github.com/grahamfairbank/vme-insight/blob/main/docs/CONFIGURATION.md#https-front-end)).
+vme-insight 0.2.0 and later have everything option A needs as optional settings. The step-by-step guide is vme-insight's [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md). In outline:
 
-### 1. Grafana settings
+1. **Grafana:** embedding on, anonymous read-only Viewer on, Grafana's own port kept on the Docker host (`GRAFANA_ALLOW_EMBEDDING`, `GRAFANA_ANONYMOUS`, `GRAFANA_BIND=127.0.0.1`).
+2. **https:** vme-insight's https front end (`--profile https`), with its own certificate authority or your certificate.
+3. **Network restriction:** `HTTPS_ALLOW` lists the networks your VME admins use; everyone else gets `403`.
+4. **Certificate trust:** each admin workstation trusts the certificate. On Windows, import the root with PowerShell into a *Root* store; Windows' import wizard files it as an intermediate, where browsers still reject it.
+5. **Plugin:** set **vme-insight Grafana URL** to the https address.
 
-In vme-insight's `.env`:
-
-```bash
-GRAFANA_ALLOW_EMBEDDING=true                 # no X-Frame-Options: deny
-GRAFANA_ANONYMOUS=true                       # read-only Viewer without signing in
-GRAFANA_ANONYMOUS_ORG="Main Org."            # must match an organisation's name exactly
-GRAFANA_BIND=127.0.0.1                       # Grafana's own port only on the Docker host
-GRAFANA_ROOT_URL=https://vme-insight.example.com:3443/
-GRAFANA_COOKIE_SECURE=true
-```
-
-`Main Org.` is Grafana's default organisation, where vme-insight provisions its dashboards. Admins still sign in (top right → **Sign in**) for anything beyond viewing.
-
-**Hardening: a dedicated organisation.** Create an organisation such as `VME viewers`, provision vme-insight's data sources and dashboards into it as well, and point `GRAFANA_ANONYMOUS_ORG` at it. Set the plugin's **Grafana organisation ID** to its id. Anonymous viewers then see only what's in that organisation, even if someone later adds other dashboards or data sources to Main Org.
-
-### 2. https in front of Grafana
-
-VME is served over https, and browsers block `http://` frames inside https pages (mixed content). vme-insight's optional front end (Caddy) adds https:
-
-```bash
-HTTPS_PORT=3443
-HTTPS_HOSTNAME=vme-insight.example.com       # the name users type
-HTTPS_TLS=internal                           # or "/certs/<cert>.pem /certs/<key>.pem"
-```
-
-The certificate must be **trusted by your users' browsers**. A framed page can't show a certificate warning; it just stays blank.
-
-* **Your own certificate** (internal or public CA): put it in vme-insight's `https/certs/` and set `HTTPS_TLS`.
-* **`internal`**: the front end runs its own small CA. Export its root certificate and install it as a trusted root on each admin workstation:
-  ```bash
-  docker compose --profile https cp https:/data/caddy/pki/authorities/local/root.crt vme-insight-root.crt
-  ```
-  On **Windows** (Edge, Chrome), use PowerShell, in the folder holding `vme-insight-root.crt`. Pick one option. Don't double-click the certificate to install it: Windows' import wizard files it under *Intermediate Certification Authorities*, where browsers still reject it.
-
-  **Option 1: every user on the machine (needs administrator rights).** Writing to the machine-wide store needs an elevated PowerShell; in a normal window, `Import-Certificate` fails with *Access is denied*. This command opens an elevated window and runs the import there. Approve the **UAC** prompt (*Do you want to allow this app to make changes to your device?* → **Yes**):
-  ```powershell
-  Start-Process powershell -Verb RunAs -ArgumentList '-NoExit','-Command',"Import-Certificate -FilePath '$PWD\vme-insight-root.crt' -CertStoreLocation Cert:\LocalMachine\Root"
-  ```
-
-  **Option 2: just your Windows account (no administrator rights needed).** Edge and Chrome trust this store too. Windows shows a security warning asking you to confirm installing a root certificate; click **Yes**:
-  ```powershell
-  Import-Certificate -FilePath .\vme-insight-root.crt -CertStoreLocation Cert:\CurrentUser\Root
-  ```
-
-  **Check** that it landed in a Root store. It should list *Caddy Local Authority - &lt;year&gt; ECC Root*, under `LocalMachine\Root` (option 1) or `CurrentUser\Root` (option 2):
-  ```powershell
-  Get-ChildItem Cert:\LocalMachine\Root, Cert:\CurrentUser\Root | Where-Object Subject -like '*Caddy Local Authority*' | Format-List PSParentPath, Subject, Thumbprint, NotAfter
-  ```
-
-  **Clean up** a copy left by an earlier double-click install, which Windows filed as an intermediate. Removing it from `LocalMachine\CA` needs the elevated window from option 1; `CurrentUser\CA` works in any window:
-  ```powershell
-  Get-ChildItem Cert:\LocalMachine\CA, Cert:\CurrentUser\CA | Where-Object Subject -like '*Caddy Local Authority*' | Remove-Item
-  ```
-
-  Then close every browser window and reopen it. On macOS use Keychain Access (System, **Always Trust**); Firefox keeps its own certificate list (Settings → Privacy & Security → Certificates → Authorities → Import).
-
-  For a quick lab test, opening the Grafana URL in its own tab and accepting the warning also works, until the browser is restarted.
-
-### 3. Restrict who can reach Grafana
-
-```bash
-HTTPS_ALLOW="10.20.0.0/16 192.168.13.0/24"    # networks your VME admins work from
-```
-
-Everyone else gets `403 Forbidden`. With `GRAFANA_BIND=127.0.0.1`, the front end is the only way in from other machines. Then:
-
-```bash
-docker compose up -d grafana
-docker compose --profile https up -d https
-```
-
-### 4. Point the plugin at it
-
-In VME: **Administration → Integrations → Plugins → vme-insight** (pencil) → **vme-insight Grafana URL** = `https://vme-insight.example.com`. See [CONFIGURATION](CONFIGURATION.md).
-
-### Check it
-
-From a machine on an allowed network (no Grafana session):
-
-```bash
-curl -sI https://vme-insight.example.com:3443/d/vme-overview | grep -i -E '^HTTP|x-frame-options'
-```
-
-You should get `HTTP/2 200` and **no** `X-Frame-Options` header. From a machine outside `HTTPS_ALLOW` you should get `403`. A `302` to `/login` means anonymous access is off; `X-Frame-Options: deny` means embedding is off.
+**Hardening: a dedicated organisation.** Create a Grafana organisation such as `VME viewers`, provision vme-insight's data sources and dashboards into it as well, and point `GRAFANA_ANONYMOUS_ORG` at it. Set the plugin's **Grafana organisation ID** to its id. Anonymous viewers then see only what's in that organisation, even if someone later adds other dashboards or data sources to Main Org.
 
 ## What the plugin itself exposes
 

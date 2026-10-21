@@ -123,7 +123,7 @@ class VmeInsightPlugin extends Plugin {
 				fieldLabel: 'Home dashboard panel IDs', inputType: OptionType.InputType.TEXT, required: false,
 				displayOrder: order++, defaultValue: InsightSettings.DEFAULT_WIDGET_PANELS,
 				placeHolderText: InsightSettings.DEFAULT_WIDGET_PANELS,
-				helpText: 'Comma-separated panel IDs from the VME Overview dashboard to show in the vme-insight home dashboard.'
+				helpText: 'Comma-separated tile IDs from vme-insight\'s "VME Summary tiles" dashboard (vme-widget), in display order. See the plugin\'s CONFIGURATION guide for the list.'
 			),
 			new OptionType(
 				name: 'Host type codes', code: 'vme-insight-host-codes', fieldName: InsightSettings.HOST_TYPE_CODES,

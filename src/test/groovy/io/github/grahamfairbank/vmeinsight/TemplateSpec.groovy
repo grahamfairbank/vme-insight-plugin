@@ -52,7 +52,7 @@ class TemplateSpec extends Specification {
 
 		then:
 		html.count('<iframe') == 2
-		decoded(html).contains('src="https://g/d-solo/vme-overview?panelId=39"')
+		decoded(html).contains('src="https://g/d-solo/vme-widget?panelId=39"')
 		empty.contains('Set the vme-insight Grafana URL')
 		!empty.contains('<iframe')
 	}

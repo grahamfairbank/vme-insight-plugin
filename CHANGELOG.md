@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+* The home dashboard widget uses vme-insight's **VME Summary tiles** dashboard (`vme-widget`, vme-insight 0.2.0+), whose panel ids never change. Default tiles are the same as before, now `1,2,3,4,7,8,9,12`; the old default list is read as the new one.
+* Docs: the setup guide moved to vme-insight ([VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md)), so both projects share one walkthrough. INSTALL here covers building, upgrading and removing. README adds a compatibility table.
+
 ## 0.1.1
 
 * Fixed: on VME 9.1.0.1 the tabs showed "This content is blocked" because the page's Content-Security-Policy had no `frame-src` for Grafana. The plugin now falls back to the Grafana origin from its last successful settings read when VME asks for the policy.

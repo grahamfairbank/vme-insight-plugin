@@ -16,12 +16,12 @@ Most problems are between the browser and Grafana, not in VME. Start with the br
 
 | Console or Network shows | Cause | Fix |
 |---|---|---|
-| `Mixed Content: ... requested an insecure frame 'http://...'` | Grafana URL is http, VME is https | Serve Grafana over https and update the URL ([AUTH](AUTH.md#2-https-in-front-of-grafana)). The tab also shows a warning. |
+| `Mixed Content: ... requested an insecure frame 'http://...'` | Grafana URL is http, VME is https | Serve Grafana over https and update the URL ([AUTH](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md#3-make-browsers-trust-the-certificate)). The tab also shows a warning. |
 | `Refused to display ... in a frame because it set 'X-Frame-Options' to 'deny'` | Grafana embedding is off | vme-insight `.env`: `GRAFANA_ALLOW_EMBEDDING=true`, then `docker compose up -d grafana`. |
 | `Refused to frame ... because it violates ... default-src` or `frame-src` (Chrome and Edge show "This content is blocked. Contact the site owner") | VME's page policy doesn't list the Grafana origin | Use plugin 0.1.1 or later: 0.1.0 could return no policy where VME asks for it. Check the URL setting is saved, then reload the page. If it persists after changing the URL, disable and re-enable the plugin. |
-| `net::ERR_CERT_AUTHORITY_INVALID`, or Edge's "might be having issues" page in the tab; vme-insight's https log (with `HTTPS_LOG_LEVEL=DEBUG`) shows `tls: unknown certificate` | Browser doesn't trust Grafana's certificate; frames can't show the warning. On Windows the usual cause is a certificate installed by double-clicking it, which files it under *Intermediate Certification Authorities*. | Import vme-insight's root certificate with the PowerShell commands in [AUTH](AUTH.md#2-https-in-front-of-grafana), which also remove a misplaced copy, then restart the browser. Or use your own certificate. In a lab, opening the Grafana URL in its own tab and accepting the warning works until the browser restarts. |
+| `net::ERR_CERT_AUTHORITY_INVALID`, or Edge's "might be having issues" page in the tab; vme-insight's https log (with `HTTPS_LOG_LEVEL=DEBUG`) shows `tls: unknown certificate` | Browser doesn't trust Grafana's certificate; frames can't show the warning. On Windows the usual cause is a certificate installed by double-clicking it, which files it under *Intermediate Certification Authorities*. | Import vme-insight's root certificate with the PowerShell commands in [AUTH](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md#3-make-browsers-trust-the-certificate), which also remove a misplaced copy, then restart the browser. Or use your own certificate. In a lab, opening the Grafana URL in its own tab and accepting the warning works until the browser restarts. |
 | `403 Forbidden` from the frame | Your workstation's network isn't in vme-insight's `HTTPS_ALLOW` | Add it to `HTTPS_ALLOW` and `docker compose --profile https up -d https`. |
-| Request times out | Browser can't reach Grafana (firewall, VPN, DNS) | Open the Grafana URL directly from the same machine. Check the network allowlist in [AUTH](AUTH.md#3-restrict-who-can-reach-grafana). |
+| Request times out | Browser can't reach Grafana (firewall, VPN, DNS) | Open the Grafana URL directly from the same machine. Check vme-insight's `HTTPS_ALLOW`. |
 
 ## Tab shows Grafana's sign-in page, or signs in and comes back
 
@@ -53,7 +53,7 @@ Anonymous access is off, or set to an organisation that doesn't exist. A sign-in
 |---|---|---|
 | No vme-insight dashboard to choose in **Dashboards to Display** | Plugin not loaded, or VME hasn't synced dashboards since the upload | Check the plugin status; reload the settings page. Re-enable the plugin if needed. |
 | Dashboard listed but empty | The widget type registered after the dashboard | Disable and re-enable the plugin, or restart the VME UI service. |
-| Some tiles say "Panel not found" | Panel IDs changed in a newer vme-insight | Update **Home dashboard panel IDs** ([CONFIGURATION](CONFIGURATION.md#home-dashboard-panel-ids)). |
+| Some tiles say "Panel not found" or "Dashboard not found" | vme-insight older than 0.2.0 (no `vme-widget` dashboard), or a custom panel list from plugin 0.1.x | Upgrade vme-insight; check **Home dashboard panel IDs** ([CONFIGURATION](CONFIGURATION.md#home-dashboard-panel-ids)). |
 | Some users don't see the widget | Their role can't read clusters | The widget follows **Infrastructure: Clusters → Read**. |
 
 ## Plugin won't load

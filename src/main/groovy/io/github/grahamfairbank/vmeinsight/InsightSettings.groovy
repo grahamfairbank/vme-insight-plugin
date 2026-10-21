@@ -24,9 +24,12 @@ class InsightSettings {
 	static final String SHOW_LAUNCHER = 'showLauncher'
 
 	static final int DEFAULT_TAB_HEIGHT = 1400
-	// vme-overview panels: Clusters, Hosts, VMs, VMs running, Active alarms, VME manager,
-	// Worst VM CPU ready, VMs over 10% ready. Panel ids come from vme-insight 0.1's dashboard build.
-	static final String DEFAULT_WIDGET_PANELS = '2,3,4,5,8,9,36,39'
+	/** vme-insight's tiles-for-embedding dashboard (0.2.0+). Its panel ids never change. */
+	static final String WIDGET_DASHBOARD = 'vme-widget'
+	// Clusters, Hosts, VMs, VMs running, Active alarms, VME manager, Worst VM CPU ready, VMs over 10% ready
+	static final String DEFAULT_WIDGET_PANELS = '1,2,3,4,7,8,9,12'
+	// Plugin 0.1.0/0.1.1 default (the same tiles, as ids on vme-overview); read as the new default
+	static final String LEGACY_WIDGET_PANELS = '2,3,4,5,8,9,36,39'
 
 	/** Grafana base URL without a trailing slash, or null when unset or not http(s). */
 	final String baseUrl
@@ -47,7 +50,9 @@ class InsightSettings {
 		theme = (t in ['light', 'dark']) ? t : null
 		Long h = positiveLong(str(s[TAB_HEIGHT]))
 		tabHeight = (h != null && h >= 300 && h <= 10000) ? h.intValue() : DEFAULT_TAB_HEIGHT
-		widgetPanels = parsePanels(str(s[WIDGET_PANELS]) ?: DEFAULT_WIDGET_PANELS)
+		String panels = str(s[WIDGET_PANELS])
+		if (panels?.replaceAll(/\s/, '') == LEGACY_WIDGET_PANELS) panels = null
+		widgetPanels = parsePanels(panels ?: DEFAULT_WIDGET_PANELS)
 		hostTypeCodes = codes(str(s[HOST_TYPE_CODES]))
 		vmTypeCodes = codes(str(s[VM_TYPE_CODES]))
 		requirePermission = truthy(s[REQUIRE_PERMISSION])
@@ -100,10 +105,10 @@ class InsightSettings {
 		return dashboard('vme-overview', new ArrayList<Param>(), false)
 	}
 
-	/** Single-panel URLs (Grafana /d-solo) for the home dashboard widget. */
+	/** Single-panel URLs (Grafana /d-solo on vme-insight's vme-widget dashboard) for the home dashboard widget. */
 	List<String> widgetPanelUrls() {
 		if (!baseUrl) return []
-		return widgetPanels.collect { Integer id -> url('/d-solo/vme-overview', [new Param('panelId', id)]) }
+		return widgetPanels.collect { Integer id -> url("/d-solo/${WIDGET_DASHBOARD}".toString(), [new Param('panelId', id)]) }
 	}
 
 	/** One query parameter; a null value is written as a bare flag (e.g. kiosk). */
