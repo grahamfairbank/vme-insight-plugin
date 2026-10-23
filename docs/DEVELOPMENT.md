@@ -107,11 +107,11 @@ They're versioned and released independently: they install into different system
    git tag -a v0.1.3 -m "vme-insight-plugin 0.1.3: <summary>"
    git push origin main v0.1.3
    ```
-4. **GitHub release** for the tag, titled `vme-insight-plugin <version>`, with the jar attached. The notes say what changed, what it requires (VME and vme-insight versions), how to install, the jar's SHA-256, and the community-project disclaimer:
+4. **GitHub release** for the tag, titled `vme-insight-plugin v<version>`, with the jar attached. The notes say what changed, what it requires (VME and vme-insight versions), how to install, the jar's SHA-256, and the community-project disclaimer:
    ```bash
    sha256sum build/libs/vme-insight-plugin-0.1.3.jar
    gh release create v0.1.3 build/libs/vme-insight-plugin-0.1.3.jar \
-     --title "vme-insight-plugin 0.1.3" --notes-file release-notes.md
+     --title "vme-insight-plugin v0.1.3" --notes-file release-notes.md
    ```
 5. **vme-insight's compatibility table.** If the release changes what the plugin needs, add or update the row in vme-insight's README in the same week.
 
