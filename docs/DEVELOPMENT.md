@@ -73,8 +73,46 @@ Unit tests cover URL building, settings parsing, host/VM classification, the per
 * settings field types (number, checkbox) save and read back as expected;
 * the corner link's placement in VME 9.1's layout.
 
-## Releasing
+## Repositories, versions and releases
 
-1. Update `version` in `gradle.properties` and `CHANGELOG.md`.
-2. `tools/build.sh`.
-3. Tag `v<version>` and attach `build/libs/vme-insight-plugin-<version>.jar` to the release.
+vme-insight and this plugin follow the same conventions.
+
+### Two repositories
+
+| Repository | What it is | Depends on |
+|---|---|---|
+| [grahamfairbank/vme-insight](https://github.com/grahamfairbank/vme-insight) | The platform: collector, TimescaleDB, Prometheus, Grafana, dashboards. Complete on its own. | VME |
+| [grahamfairbank/vme-insight-plugin](https://github.com/grahamfairbank/vme-insight-plugin) | This plugin: an optional add-on installed in the VME manager. | vme-insight and VME |
+
+They're versioned and released independently: they install into different systems (a Docker host and the VME manager), and many vme-insight users never install the plugin. What ties them together:
+
+* **One setup guide**, in vme-insight: [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md). This repository's docs link to it rather than repeat it.
+* **Compatibility tables** in both READMEs, updated with every release of either project.
+* **Contracts** the plugin relies on, which vme-insight keeps stable: dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) and the `vme-widget` panel ids, which are never renumbered or reused. Changing one is a breaking change for the plugin and needs a compatibility row saying so.
+
+### Versions
+
+`MAJOR.MINOR.PATCH`. While the major version is 0: a new feature or setting bumps MINOR, fixes and documentation-only releases bump PATCH. The version lives in `gradle.properties` (`version=`) and becomes the jar name and the plugin version VME shows.
+
+### Changelog
+
+`CHANGELOG.md`, newest first. Each release has a heading `## <version> (<YYYY-MM-DD>)`, with bullets for what changed from a user's point of view. Note anything that needs a newer vme-insight or VME, or a settings change.
+
+### Releasing
+
+1. **Release commit.** Set `version` in `gradle.properties`, date the changelog heading, and add a row to the README's **Compatibility** table (and **Tested versions**, if you tested). Commit as `Release <version>: <summary>`.
+2. **Build and test.** `tools/build.sh` must pass. The jar is `build/libs/vme-insight-plugin-<version>.jar`.
+3. **Annotated tag** on the release commit, named `v<version>`, with a one-line summary:
+   ```bash
+   git tag -a v0.1.3 -m "vme-insight-plugin 0.1.3: <summary>"
+   git push origin main v0.1.3
+   ```
+4. **GitHub release** for the tag, titled `vme-insight-plugin <version>`, with the jar attached. The notes say what changed, what it requires (VME and vme-insight versions), how to install, the jar's SHA-256, and the community-project disclaimer:
+   ```bash
+   sha256sum build/libs/vme-insight-plugin-0.1.3.jar
+   gh release create v0.1.3 build/libs/vme-insight-plugin-0.1.3.jar \
+     --title "vme-insight-plugin 0.1.3" --notes-file release-notes.md
+   ```
+5. **vme-insight's compatibility table.** If the release changes what the plugin needs, add or update the row in vme-insight's README in the same week.
+
+vme-insight releases the same way (release commit, dated changelog, compatibility row, annotated `v<version>` tag, GitHub release with notes), without a jar.

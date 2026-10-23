@@ -16,7 +16,7 @@ This page covers what is specific to the plugin: building it, upgrading and remo
 ## Build from source
 
 ```bash
-git clone https://github.com/grahamfairbank/vme-insight-plugin
+git clone https://github.com/grahamfairbank/vme-insight-plugin.git
 cd vme-insight-plugin
 tools/build.sh
 ```

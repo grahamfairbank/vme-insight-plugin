@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.3 (2026-10-23)
+
+Documentation release; the plugin's behaviour is unchanged.
+
+* Docs follow vme-insight 0.4.x's certificate guidance: prefer a certificate your browsers already trust, else a self-signed certificate for that host only; the built-in CA is a lab shortcut. Check the fingerprint before importing.
+* Troubleshooting for browsing by IP (`ERR_SSL_PROTOCOL_ERROR`, `HTTPS_DEFAULT_SNI`) and for a plugin URL that differs from `GRAFANA_ROOT_URL`.
+* [DEVELOPMENT](docs/DEVELOPMENT.md#repositories-versions-and-releases) documents the two repositories, versioning, changelog, tags and GitHub releases shared with vme-insight.
+* Tested with vme-insight 0.4.4.
+
 ## 0.1.2 (2026-10-21)
 
 * The home dashboard widget uses vme-insight's **VME Summary tiles** dashboard (`vme-widget`, vme-insight 0.2.0+), whose panel ids never change. Default tiles are the same as before, now `1,2,3,4,7,8,9,12`; the old default list is read as the new one.

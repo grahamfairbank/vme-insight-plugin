@@ -57,10 +57,10 @@ Choose **B** instead if your security policy requires named users for monitoring
 vme-insight 0.2.0 and later have everything option A needs as optional settings. The step-by-step guide is vme-insight's [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md). In outline:
 
 1. **Grafana:** embedding on, anonymous read-only Viewer on, Grafana's own port kept on the Docker host (`GRAFANA_ALLOW_EMBEDDING`, `GRAFANA_ANONYMOUS`, `GRAFANA_BIND=127.0.0.1`).
-2. **https:** vme-insight's https front end (`--profile https`), with its own certificate authority or your certificate.
+2. **https:** vme-insight's https front end (`--profile https`), with a certificate from a CA your browsers already trust if you have one; otherwise a self-signed certificate for that host only (`tools/make-cert.sh host`). The built-in CA (`HTTPS_TLS=internal`) is a lab shortcut: it can vouch for any website once trusted.
 3. **Network restriction:** `HTTPS_ALLOW` lists the networks your VME admins use; everyone else gets `403`.
-4. **Certificate trust:** each admin workstation trusts the certificate. On Windows, import the root with PowerShell into a *Root* store; Windows' import wizard files it as an intermediate, where browsers still reject it.
-5. **Plugin:** set **vme-insight Grafana URL** to the https address.
+4. **Certificate trust:** unless the certificate comes from a CA your browsers already trust, each admin workstation imports it, after checking its fingerprint. On Windows, use PowerShell into a *Root* store, for your own account unless the machine is shared; Windows' import wizard files it as an intermediate, where browsers still reject it.
+5. **Plugin:** set **vme-insight Grafana URL** to the https address users browse to, the same as `GRAFANA_ROOT_URL`.
 
 **Hardening: a dedicated organisation.** Create a Grafana organisation such as `VME viewers`, provision vme-insight's data sources and dashboards into it as well, and point `GRAFANA_ANONYMOUS_ORG` at it. Set the plugin's **Grafana organisation ID** to its id. Anonymous viewers then see only what's in that organisation, even if someone later adds other dashboards or data sources to Main Org.
 

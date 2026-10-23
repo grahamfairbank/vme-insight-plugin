@@ -6,7 +6,7 @@ All settings are on **Administration → Integrations → Plugins → vme-insigh
 
 | Setting | Default | What it does |
 |---|---|---|
-| **vme-insight Grafana URL** | *(blank)* | Base URL of vme-insight's Grafana **as users' browsers reach it**, e.g. `https://vme-insight.example.com` or `https://tools.example.com/grafana`. Must start with `https://` (or `http://`, which browsers block inside VME; the tab then shows a warning). Blank, or anything that isn't a plain http(s) URL, hides every tab, the widget content and the corner link. |
+| **vme-insight Grafana URL** | *(blank)* | Base URL of vme-insight's Grafana **as users' browsers reach it**, the same address as vme-insight's `GRAFANA_ROOT_URL` (a name is better than an IP), e.g. `https://vme-insight.example.com` or `https://tools.example.com/grafana`. Must start with `https://` (or `http://`, which browsers block inside VME; the tab then shows a warning). Blank, or anything that isn't a plain http(s) URL, hides every tab, the widget content and the corner link. |
 | **Grafana organisation ID** | *(blank)* | Adds `orgId=<n>` to every URL. Set it when anonymous viewers use a dedicated organisation ([AUTH](AUTH.md#recommended-setup)). |
 | **Grafana theme** | *(blank)* | `light` or `dark` forces that theme in the frames. Blank uses Grafana's default (or the viewer's preference). |
 | **Tab height (pixels)** | `1400` | Height of the frame in each tab, 300 to 10000. The dashboard scrolls inside it. |
