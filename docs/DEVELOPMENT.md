@@ -115,4 +115,4 @@ They're versioned and released independently: they install into different system
    ```
 5. **vme-insight's compatibility table.** If the release changes what the plugin needs, add or update the row in vme-insight's README in the same week.
 
-vme-insight releases the same way (release commit, dated changelog, compatibility row, annotated `v<version>` tag, GitHub release with notes), without a jar.
+vme-insight releases the same way (release commit, dated changelog, compatibility row, annotated `v<version>` tag, GitHub release with notes), without a jar; see its [RELEASING](https://github.com/grahamfairbank/vme-insight/blob/main/docs/RELEASING.md).
