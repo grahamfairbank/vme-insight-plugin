@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 (2026-10-26)
+
+* The note under each tab links to the [troubleshooting guide](docs/TROUBLESHOOTING.md) on GitHub (opens in a new tab), instead of only naming it.
+
 ## 0.1.4 (2026-10-26)
 
 * Text in US English throughout: the settings form says "Grafana organization" and "Grafana organization ID" (was "organisation"), and the docs follow. The setting itself is unchanged, so saved values carry over; no action needed when upgrading.

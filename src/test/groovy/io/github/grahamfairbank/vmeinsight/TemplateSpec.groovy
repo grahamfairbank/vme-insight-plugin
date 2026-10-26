@@ -32,6 +32,7 @@ class TemplateSpec extends Specification {
 		decoded(html).contains('<iframe src="https://g.example.com/d/vme-hosts?var-host=9&kiosk&orgId=1"')
 		decoded(html).contains('href="https://g.example.com/d/vme-hosts?var-host=9&orgId=1"')
 		html.contains('height="1400"')
+		html.contains('href="https://github.com/grahamfairbank/vme-insight-plugin/blob/main/docs/TROUBLESHOOTING.md"')
 		!html.contains('Browsers block http frames')
 	}
 

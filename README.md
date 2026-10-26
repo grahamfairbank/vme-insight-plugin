@@ -72,6 +72,7 @@ Follow vme-insight's **[VME-PLUGIN](https://github.com/grahamfairbank/vme-insigh
 
 | vme-insight-plugin | vme-insight | VME |
 |---|---|---|
+| 0.1.5 | 0.2.0 or later | 9.1 or later |
 | 0.1.4 | 0.2.0 or later | 9.1 or later |
 | 0.1.3 | 0.2.0 or later (tested with 0.4.4) | 9.1 or later |
 | 0.1.2 | 0.2.0 or later (home widget uses its `vme-widget` dashboard) | 9.1 or later |
