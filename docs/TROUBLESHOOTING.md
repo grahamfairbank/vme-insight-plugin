@@ -27,17 +27,17 @@ Most problems are between the browser and Grafana, not in VME. Start with the br
 
 ## Tab shows Grafana's sign-in page, or signs in and comes back
 
-Anonymous access is off, or set to an organisation that doesn't exist. A sign-in inside the frame won't stick ([why](AUTH.md#why-signing-in-inside-the-frame-doesnt-work)).
+Anonymous access is off, or set to an organization that doesn't exist. A sign-in inside the frame won't stick ([why](AUTH.md#why-signing-in-inside-the-frame-doesnt-work)).
 
 * vme-insight `.env`: `GRAFANA_ANONYMOUS=true`, then `docker compose up -d grafana`.
-* `GRAFANA_ANONYMOUS_ORG` must match an organisation name exactly, including the full stop in `Main Org.`.
+* `GRAFANA_ANONYMOUS_ORG` must match an organization name exactly, including the full stop in `Main Org.`.
 * Check: `curl -sI https://<grafana>/d/vme-overview` returns `200`, not `302`.
 
 ## Tab shows "Dashboard not found"
 
 | Cause | Fix |
 |---|---|
-| **Grafana organisation ID** points at an organisation without vme-insight's dashboards | Clear it, or provision the dashboards into that organisation. |
+| **Grafana organization ID** points at an organization without vme-insight's dashboards | Clear it, or provision the dashboards into that organization. |
 | The URL points at a different Grafana | Check the URL. vme-insight's dashboards have fixed uids (`vme-hosts`, `vme-vms`, `vme-overview`). |
 
 ## Dashboard loads but shows the wrong thing or "No data"

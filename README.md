@@ -8,7 +8,7 @@ A small **HPE Morpheus VM Essentials (VME)** UI plugin that shows [vme-insight](
 
 **Supported:** VME 9.1 and later (Plugin API 1.5.0), with vme-insight 0.2.0 or later. See [Compatibility](#compatibility).
 
-> **Community project.** vme-insight-plugin is independent and community maintained. It is not affiliated with, endorsed, sponsored or supported by Hewlett Packard Enterprise, Morpheus Data, or any related organisation. See the [disclaimer](#disclaimer).
+> **Community project.** vme-insight-plugin is independent and community maintained. It is not affiliated with, endorsed, sponsored or supported by Hewlett Packard Enterprise, Morpheus Data, or any related organization. See the [disclaimer](#disclaimer).
 
 ## What you get
 
@@ -72,6 +72,7 @@ Follow vme-insight's **[VME-PLUGIN](https://github.com/grahamfairbank/vme-insigh
 
 | vme-insight-plugin | vme-insight | VME |
 |---|---|---|
+| 0.1.4 | 0.2.0 or later | 9.1 or later |
 | 0.1.3 | 0.2.0 or later (tested with 0.4.4) | 9.1 or later |
 | 0.1.2 | 0.2.0 or later (home widget uses its `vme-widget` dashboard) | 9.1 or later |
 | 0.1.0 – 0.1.1 | 0.2.0 or later (https front end, anonymous viewing) | 9.1 or later |
@@ -102,13 +103,13 @@ HPE's documentation for Morpheus and VM Essentials is published at [HewlettPacka
 | Choosing home dashboards | [Appliance settings → Dashboards to Display](https://github.com/HewlettPackard/morpheus-docs/blob/dev-9.1/administration/settings/appliance.rst) |
 | Role permissions | [Role permissions](https://github.com/HewlettPackard/morpheus-docs/blob/dev-9.1/administration/roles/role_permissions.rst) |
 
-The plugin APIs themselves are documented in [morpheus-plugin-core](https://github.com/HewlettPackard/morpheus-plugin-core) and the [Morpheus Developer Portal](https://developer.morpheusdata.com). Links point at the `dev-9.1` branch, matching the supported release. Where these pages and this plugin disagree, HPE's documentation describes VME's behaviour.
+The plugin APIs themselves are documented in [morpheus-plugin-core](https://github.com/HewlettPackard/morpheus-plugin-core) and the [Morpheus Developer Portal](https://developer.morpheusdata.com). Links point at the `dev-9.1` branch, matching the supported release. Where these pages and this plugin disagree, HPE's documentation describes VME's behavior.
 
 ## Disclaimer
 
 vme-insight-plugin is an independent, community-maintained open-source project.
 
-* It is **not affiliated with, endorsed, sponsored or supported by** Hewlett Packard Enterprise (HPE), Morpheus Data, or any of their subsidiaries or affiliates, nor by Grafana Labs or any other organisation whose products it works with.
+* It is **not affiliated with, endorsed, sponsored or supported by** Hewlett Packard Enterprise (HPE), Morpheus Data, or any of their subsidiaries or affiliates, nor by Grafana Labs or any other organization whose products it works with.
 * HPE, Morpheus, VM Essentials, HVM and other product names are trademarks of their respective owners. They are used here only to describe what the software works with.
 * It is **not an HPE product and not covered by HPE support**. Please don't raise HPE support cases about this plugin; use this repository's issues instead.
 * It runs inside your VME manager. Custom plugins run with the manager's privileges, so review the source (it is short) and check your HPE support terms before installing third-party plugins on a production manager.

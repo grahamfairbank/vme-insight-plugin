@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.1.4 (2026-10-26)
+
+* Text in US English throughout: the settings form says "Grafana organization" and "Grafana organization ID" (was "organisation"), and the docs follow. The setting itself is unchanged, so saved values carry over; no action needed when upgrading.
+
 ## 0.1.3 (2026-10-23)
 
-Documentation release; the plugin's behaviour is unchanged.
+Documentation release; the plugin's behavior is unchanged.
 
 * Docs follow vme-insight 0.4.x's certificate guidance: prefer a certificate your browsers already trust, else a self-signed certificate for that host only; the built-in CA is a lab shortcut. Check the fingerprint before importing.
 * Troubleshooting for browsing by IP (`ERR_SSL_PROTOCOL_ERROR`, `HTTPS_DEFAULT_SNI`) and for a plugin URL that differs from `GRAFANA_ROOT_URL`.

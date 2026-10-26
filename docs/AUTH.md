@@ -3,7 +3,7 @@
 The plugin only builds a URL. The **browser** loads the dashboard from vme-insight's Grafana inside a frame on a VME page. So two things must be true for a tab to show anything:
 
 1. **Grafana must allow being framed.** By default Grafana sends `X-Frame-Options: deny`. vme-insight turns this off with `GRAFANA_ALLOW_EMBEDDING=true` in its `.env`.
-2. **The browser must be let into Grafana without a sign-in page.** A sign-in inside the frame rarely works (see [why](#why-signing-in-inside-the-frame-doesnt-work)), so Grafana has to recognise the viewer some other way.
+2. **The browser must be let into Grafana without a sign-in page.** A sign-in inside the frame rarely works (see [why](#why-signing-in-inside-the-frame-doesnt-work)), so Grafana has to recognize the viewer some other way.
 
 This page compares the ways to do the second, recommends one, and lists what each exposes.
 
@@ -21,7 +21,7 @@ So the frame needs an approach that doesn't depend on a Grafana session cookie.
 
 | | **A. Anonymous Viewer, restricted by network** *(recommended)* | **B. Auth proxy** | **C. Service-account token** |
 |---|---|---|---|
-| How | Grafana treats anyone who can reach it as a read-only Viewer in one organisation. A firewall or reverse proxy limits who can reach it. | A reverse proxy authenticates the user (for example oauth2-proxy against your IdP) and passes the user name to Grafana in a trusted header (`[auth.proxy]`). | A Grafana service-account token authenticates requests. |
+| How | Grafana treats anyone who can reach it as a read-only Viewer in one organization. A firewall or reverse proxy limits who can reach it. | A reverse proxy authenticates the user (for example oauth2-proxy against your IdP) and passes the user name to Grafana in a trusted header (`[auth.proxy]`). | A Grafana service-account token authenticates requests. |
 | Works in the frame? | **Yes.** No cookie or sign-in needed. | Only after the user has signed in to the proxy in a normal tab, and only where the browser sends the proxy's third-party cookie (`SameSite=None; Secure`). Breaks in Safari and Firefox defaults. | **No, not on its own.** Tokens go in an `Authorization` header, which a browser can't add to a frame. Grafana doesn't accept them in the URL. It needs a proxy to inject the header, which makes it option A with a secret to manage. |
 | Who is the viewer in Grafana | Everyone is the same anonymous Viewer | The real user (from your IdP) | Whoever the token belongs to |
 | Changes to vme-insight | Grafana settings (`.env` / compose), an https front end, a network rule | An https proxy with an IdP client, Grafana `auth.proxy` settings | A proxy that injects the header |
@@ -31,7 +31,7 @@ So the frame needs an approach that doesn't depend on a Grafana session cookie.
 
 **Not an option: Grafana shared ("public") dashboards.** They need no sign-in, but they ignore template variables, so a host tab couldn't filter to its host.
 
-**Later, for per-user identity: signed JWT.** Grafana can accept a short-lived signed JWT in the URL (`[auth.jwt]` with `url_login = true`). The plugin could sign one per page view with the VME user's name, and Grafana would check it with the matching public key. That gives per-user identity without a proxy. It needs a key pair held by the plugin, and its cookie behaviour in third-party frames must be tested before it can be relied on. It is a candidate for a later version, not part of v0.1.
+**Later, for per-user identity: signed JWT.** Grafana can accept a short-lived signed JWT in the URL (`[auth.jwt]` with `url_login = true`). The plugin could sign one per page view with the VME user's name, and Grafana would check it with the matching public key. That gives per-user identity without a proxy. It needs a key pair held by the plugin, and its cookie behavior in third-party frames must be tested before it can be relied on. It is a candidate for a later version, not part of v0.1.
 
 ## Recommendation: A, anonymous Viewer restricted by network
 
@@ -46,7 +46,7 @@ What you give up, and how to limit it:
 | Trade-off | Mitigation |
 |---|---|
 | No per-user identity in Grafana: everyone on the allowed networks sees every vme-insight dashboard, for every cluster, regardless of their VME role or group access | Restrict Grafana to admin networks (VPN, management VLAN). In VME, tick **Only show to roles with the vme-insight permission** so only chosen roles see the tabs (this hides the tabs; it doesn't secure Grafana). |
-| A Viewer can list data sources (names and types, no passwords) and send its own read queries to them through Grafana's API, not only view panels | vme-insight's Grafana database user can only `SELECT`. The data is the same inventory the dashboards show (host names, IPs, VM names, user names in activity). Use a dedicated Grafana organisation (below) so anonymous viewers never see anything else added to Grafana. |
+| A Viewer can list data sources (names and types, no passwords) and send its own read queries to them through Grafana's API, not only view panels | vme-insight's Grafana database user can only `SELECT`. The data is the same inventory the dashboards show (host names, IPs, VM names, user names in activity). Use a dedicated Grafana organization (below) so anonymous viewers never see anything else added to Grafana. |
 | Anyone who can reach the URL can read it without a password | The network restriction is the control. Don't publish this Grafana to the internet. |
 | Grafana's version is visible | `hide_version = true` for anonymous users. |
 
@@ -62,7 +62,7 @@ vme-insight 0.2.0 and later have everything option A needs as optional settings.
 4. **Certificate trust:** unless the certificate comes from a CA your browsers already trust, each admin workstation imports it, after checking its fingerprint. On Windows, use PowerShell into a *Root* store, for your own account unless the machine is shared; Windows' import wizard files it as an intermediate, where browsers still reject it.
 5. **Plugin:** set **vme-insight Grafana URL** to the https address users browse to, the same as `GRAFANA_ROOT_URL`.
 
-**Hardening: a dedicated organisation.** Create a Grafana organisation such as `VME viewers`, provision vme-insight's data sources and dashboards into it as well, and point `GRAFANA_ANONYMOUS_ORG` at it. Set the plugin's **Grafana organisation ID** to its id. Anonymous viewers then see only what's in that organisation, even if someone later adds other dashboards or data sources to Main Org.
+**Hardening: a dedicated organization.** Create a Grafana organization such as `VME viewers`, provision vme-insight's data sources and dashboards into it as well, and point `GRAFANA_ANONYMOUS_ORG` at it. Set the plugin's **Grafana organization ID** to its id. Anonymous viewers then see only what's in that organization, even if someone later adds other dashboards or data sources to Main Org.
 
 ## What the plugin itself exposes
 

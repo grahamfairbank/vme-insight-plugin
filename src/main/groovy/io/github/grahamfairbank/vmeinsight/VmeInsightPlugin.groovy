@@ -100,10 +100,10 @@ class VmeInsightPlugin extends Plugin {
 				helpText: 'Base URL of vme-insight\'s Grafana as your browser reaches it. Use https: browsers block http frames inside VME. Leave blank to hide all vme-insight tabs.'
 			),
 			new OptionType(
-				name: 'Grafana organisation', code: 'vme-insight-grafana-org', fieldName: InsightSettings.ORG_ID,
-				fieldLabel: 'Grafana organisation ID', inputType: OptionType.InputType.NUMBER, required: false,
+				name: 'Grafana organization', code: 'vme-insight-grafana-org', fieldName: InsightSettings.ORG_ID,
+				fieldLabel: 'Grafana organization ID', inputType: OptionType.InputType.NUMBER, required: false,
 				displayOrder: order++, placeHolderText: '1',
-				helpText: 'Optional. Adds orgId= to every URL, for example when anonymous viewers use their own organisation.'
+				helpText: 'Optional. Adds orgId= to every URL, for example when anonymous viewers use their own organization.'
 			),
 			new OptionType(
 				name: 'Theme', code: 'vme-insight-theme', fieldName: InsightSettings.THEME,
