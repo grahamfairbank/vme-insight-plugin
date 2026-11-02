@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" font-family="Segoe UI, system-ui, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3b78d8"/></marker></defs>
+<rect width="1200" height="660" fill="#ffffff"/>
+<text x="40" y="52" font-size="26" font-weight="700" fill="#1b2230">How vme-insight-plugin works</text>
+<text x="40" y="82" text-anchor="start" font-size="15" fill="#5d6676">Puts vme-insight's Grafana dashboards inside HPE Morpheus, as a tab on host, VM, instance and cluster pages.</text>
+<rect x="40" y="120" width="220" height="150" rx="10" fill="#e8f0fb" stroke="#3b78d8" stroke-width="2"/>
+<text x="150" y="146" text-anchor="middle" font-size="16" font-weight="700" fill="#1b2230">Morpheus user</text>
+<text x="150" y="170" text-anchor="middle" font-size="13" fill="#1b2230">opens a host, VM,</text>
+<text x="150" y="188" text-anchor="middle" font-size="13" fill="#1b2230">instance or cluster page</text>
+<text x="150" y="206" text-anchor="middle" font-size="13" fill="#1b2230">in a browser, then the</text>
+<text x="150" y="224" text-anchor="middle" font-size="13" fill="#1b2230">vme-insight tab.</text>
+<rect x="330" y="100" width="470" height="300" rx="12" fill="#fafdfb" stroke="#2f9e55" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="344" y="122" text-anchor="start" font-size="14" font-weight="700" fill="#2f9e55">HPE Morpheus manager: vme-insight-plugin (Plugin API 1.5.0)</text>
+<rect x="348" y="132" width="434" height="82" rx="10" fill="#e9f6ec" stroke="#2f9e55" stroke-width="2"/>
+<text x="565" y="158" text-anchor="middle" font-size="15" font-weight="700" fill="#1b2230">vme-insight tab (on four page types)</text>
+<text x="565" y="182" text-anchor="middle" font-size="13" fill="#1b2230">host, VM, instance and cluster pages</text>
+<text x="565" y="200" text-anchor="middle" font-size="13" fill="#1b2230">builds the dashboard URL from Morpheus's own object id</text>
+<rect x="348" y="226" width="210" height="84" rx="10" fill="#e9f6ec" stroke="#2f9e55" stroke-width="2"/>
+<text x="453" y="252" text-anchor="middle" font-size="15" font-weight="700" fill="#1b2230">Optional extras</text>
+<text x="453" y="276" text-anchor="middle" font-size="13" fill="#1b2230">home dashboard widget</text>
+<text x="453" y="294" text-anchor="middle" font-size="13" fill="#1b2230">corner link (off by default)</text>
+<rect x="572" y="226" width="210" height="84" rx="10" fill="#e9f6ec" stroke="#2f9e55" stroke-width="2"/>
+<text x="677" y="252" text-anchor="middle" font-size="15" font-weight="700" fill="#1b2230">CSP frame-src</text>
+<text x="677" y="276" text-anchor="middle" font-size="13" fill="#1b2230">adds the Grafana address so</text>
+<text x="677" y="294" text-anchor="middle" font-size="13" fill="#1b2230">Morpheus allows the frame</text>
+<rect x="348" y="322" width="434" height="64" rx="10" fill="#fdf3e3" stroke="#e0a030" stroke-width="2"/>
+<text x="565" y="348" text-anchor="middle" font-size="15" font-weight="700" fill="#1b2230">Plugin settings, kept in Morpheus</text>
+<text x="565" y="372" text-anchor="middle" font-size="13" fill="#1b2230">vme-insight Grafana URL, widget and link switches</text>
+<rect x="900" y="120" width="270" height="170" rx="10" fill="#e8f0fb" stroke="#3b78d8" stroke-width="2"/>
+<text x="1035" y="146" text-anchor="middle" font-size="16" font-weight="700" fill="#1b2230">vme-insight</text>
+<text x="1035" y="170" text-anchor="middle" font-size="13" fill="#1b2230">https front end, then Grafana</text>
+<text x="1035" y="188" text-anchor="middle" font-size="13" fill="#1b2230">anonymous read-only Viewer,</text>
+<text x="1035" y="206" text-anchor="middle" font-size="13" fill="#1b2230">reachable only from your networks</text>
+<text x="1035" y="224" text-anchor="middle" font-size="13" fill="#1b2230">dashboards: Hosts (var-host),</text>
+<text x="1035" y="242" text-anchor="middle" font-size="13" fill="#1b2230">VMs (var-vm), Overview (var-cluster)</text>
+<path d="M260,185 L328,185" stroke="#555" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<text x="294" y="175" text-anchor="middle" font-size="12" fill="#444">page</text>
+<path d="M328,215 L262,215" stroke="#555" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<text x="294" y="232" text-anchor="middle" font-size="12" fill="#444">tab</text>
+<path d="M150,270 L150,430 L1035,430 L1035,292" stroke="#3b78d8" stroke-width="2" fill="none" marker-end="url(#b)"/>
+<text x="590" y="422" text-anchor="middle" font-size="12" fill="#3b78d8">The browser loads the frame straight from Grafana (https, no sign-in)</text>
+<text x="590" y="444" text-anchor="middle" font-size="12" fill="#444">Morpheus itself never talks to Grafana</text>
+<text x="40" y="466" text-anchor="start" font-size="18" font-weight="700" fill="#1b2230">The main flow</text>
+<rect x="40" y="480" width="211" height="130" rx="10" fill="#f7f8fa" stroke="#9aa3b2" stroke-width="1.5"/>
+<circle cx="62" cy="504" r="13" fill="#1b2230"/>
+<text x="62" y="509" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">1</text>
+<text x="82" y="509" text-anchor="start" font-size="14" font-weight="700" fill="#1b2230">Open a page</text>
+<text x="52" y="536" text-anchor="start" font-size="12.5" fill="#1b2230">The user opens a host, VM,</text>
+<text x="52" y="553" text-anchor="start" font-size="12.5" fill="#1b2230">instance or cluster page.</text>
+<text x="52" y="570" text-anchor="start" font-size="12.5" fill="#1b2230">Morpheus asks the plugin</text>
+<text x="52" y="587" text-anchor="start" font-size="12.5" fill="#1b2230">for its tab.</text>
+<path d="M252,545 L266,545" stroke="#555" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<rect x="267" y="480" width="211" height="130" rx="10" fill="#f7f8fa" stroke="#9aa3b2" stroke-width="1.5"/>
+<circle cx="289" cy="504" r="13" fill="#1b2230"/>
+<text x="289" y="509" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">2</text>
+<text x="309" y="509" text-anchor="start" font-size="14" font-weight="700" fill="#1b2230">Build the URL</text>
+<text x="279" y="536" text-anchor="start" font-size="12.5" fill="#1b2230">The plugin picks the matching</text>
+<text x="279" y="553" text-anchor="start" font-size="12.5" fill="#1b2230">dashboard and fills in the</text>
+<text x="279" y="570" text-anchor="start" font-size="12.5" fill="#1b2230">Morpheus id, e.g. var-host=42.</text>
+<text x="279" y="587" text-anchor="start" font-size="12.5" fill="#1b2230">No credentials, no API calls.</text>
+<path d="M479,545 L493,545" stroke="#555" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<rect x="494" y="480" width="211" height="130" rx="10" fill="#f7f8fa" stroke="#9aa3b2" stroke-width="1.5"/>
+<circle cx="516" cy="504" r="13" fill="#1b2230"/>
+<text x="516" y="509" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">3</text>
+<text x="536" y="509" text-anchor="start" font-size="14" font-weight="700" fill="#1b2230">Allow the frame</text>
+<text x="506" y="536" text-anchor="start" font-size="12.5" fill="#1b2230">The plugin adds the Grafana</text>
+<text x="506" y="553" text-anchor="start" font-size="12.5" fill="#1b2230">address to the page's</text>
+<text x="506" y="570" text-anchor="start" font-size="12.5" fill="#1b2230">Content-Security-Policy</text>
+<text x="506" y="587" text-anchor="start" font-size="12.5" fill="#1b2230">frame-src.</text>
+<path d="M706,545 L720,545" stroke="#555" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<rect x="721" y="480" width="211" height="130" rx="10" fill="#f7f8fa" stroke="#9aa3b2" stroke-width="1.5"/>
+<circle cx="743" cy="504" r="13" fill="#1b2230"/>
+<text x="743" y="509" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">4</text>
+<text x="763" y="509" text-anchor="start" font-size="14" font-weight="700" fill="#1b2230">Browser loads it</text>
+<text x="733" y="536" text-anchor="start" font-size="12.5" fill="#1b2230">The browser fetches the frame</text>
+<text x="733" y="553" text-anchor="start" font-size="12.5" fill="#1b2230">directly from vme-insight over</text>
+<text x="733" y="570" text-anchor="start" font-size="12.5" fill="#1b2230">https as an anonymous Viewer.</text>
+<text x="733" y="587" text-anchor="start" font-size="12.5" fill="#1b2230">Grafana must allow embedding.</text>
+<path d="M933,545 L947,545" stroke="#555" stroke-width="2" fill="none" marker-end="url(#a)"/>
+<rect x="948" y="480" width="211" height="130" rx="10" fill="#f7f8fa" stroke="#9aa3b2" stroke-width="1.5"/>
+<circle cx="970" cy="504" r="13" fill="#1b2230"/>
+<text x="970" y="509" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">5</text>
+<text x="990" y="509" text-anchor="start" font-size="14" font-weight="700" fill="#1b2230">Open full size</text>
+<text x="960" y="536" text-anchor="start" font-size="12.5" fill="#1b2230">Each tab has "Open in</text>
+<text x="960" y="553" text-anchor="start" font-size="12.5" fill="#1b2230">vme-insight" for the same</text>
+<text x="960" y="570" text-anchor="start" font-size="12.5" fill="#1b2230">dashboard full size, with the</text>
+<text x="960" y="587" text-anchor="start" font-size="12.5" fill="#1b2230">time picker and drill-downs.</text>
+<text x="40" y="632" text-anchor="start" font-size="13" fill="#444">An add-on to vme-insight, not a standalone product. It stores no data; if a tab is blank, check vme-insight's https front end first.</text>
+<rect x="40" y="642" width="14" height="14" rx="3" fill="#e8f0fb" stroke="#3b78d8"/>
+<text x="62" y="654" text-anchor="start" font-size="12" fill="#444">Outside this project</text>
+<rect x="210" y="642" width="14" height="14" rx="3" fill="#e9f6ec" stroke="#2f9e55"/>
+<text x="232" y="654" text-anchor="start" font-size="12" fill="#444">This project</text>
+<rect x="340" y="642" width="14" height="14" rx="3" fill="#fdf3e3" stroke="#e0a030"/>
+<text x="362" y="654" text-anchor="start" font-size="12" fill="#444">Data kept</text>
+<rect x="440" y="642" width="14" height="14" rx="3" fill="#f1ecfb" stroke="#7d5bc6"/>
+<text x="462" y="654" text-anchor="start" font-size="12" fill="#444">What you see</text>
+<text x="1160" y="654" text-anchor="end" font-size="11" fill="#888">docs/how-it-works.svg · 2026-11-02</text>
+</svg>
