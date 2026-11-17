@@ -36,12 +36,14 @@ class VmeInsightPlugin extends Plugin {
 			new Permission('vme-insight: View dashboards', PERMISSION_CODE,
 				[Permission.AccessType.none, Permission.AccessType.read])
 		])
+		this.registerProvider(new VmeInsightOptionSourceProvider(this, morpheus))
 		this.registerProvider(new VmeInsightServerTabProvider(this, morpheus))
 		this.registerProvider(new VmeInsightInstanceTabProvider(this, morpheus))
 		this.registerProvider(new VmeInsightClusterTabProvider(this, morpheus))
 		this.registerProvider(new VmeInsightDashboardItemProvider(this, morpheus))
 		this.registerProvider(new VmeInsightDashboardProvider(this, morpheus))
 		this.registerProvider(new VmeInsightLauncherProvider(this, morpheus))
+		this.registerProvider(new VmeInsightThemeLoaderProvider(this, morpheus))
 	}
 
 	@Override
@@ -107,9 +109,10 @@ class VmeInsightPlugin extends Plugin {
 			),
 			new OptionType(
 				name: 'Theme', code: 'vme-insight-theme', fieldName: InsightSettings.THEME,
-				fieldLabel: 'Grafana theme', inputType: OptionType.InputType.TEXT, required: false,
-				displayOrder: order++, placeHolderText: 'light or dark',
-				helpText: 'Optional: light or dark. Blank uses the Grafana default.'
+				fieldLabel: 'Grafana theme', inputType: OptionType.InputType.SELECT, required: false,
+				optionSource: VmeInsightOptionSourceProvider.THEMES, optionSourceType: 'plugin',
+				displayOrder: order++, defaultValue: InsightSettings.THEME_MORPHEUS,
+				helpText: 'Light or dark for every vme-insight tab and home dashboard panel. Match each user\'s Morpheus theme follows the theme each user picked in User Settings. Grafana default uses Grafana\'s own setting.'
 			),
 			new OptionType(
 				name: 'Tab height', code: 'vme-insight-tab-height', fieldName: InsightSettings.TAB_HEIGHT,

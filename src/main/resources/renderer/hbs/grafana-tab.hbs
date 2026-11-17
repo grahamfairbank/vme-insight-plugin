@@ -2,7 +2,7 @@
 <div class="vme-insight-tab" style="padding: 8px 0;">
 	<div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
 		<span style="font-weight: 600;">{{title}}</span>
-		<a href="{{openUrl}}" target="_blank" rel="noopener noreferrer">Open in vme-insight &#8599;</a>
+		<a href="{{openUrl}}"{{#if match}} data-vme-insight-theme="morpheus"{{/if}} target="_blank" rel="noopener noreferrer">Open in vme-insight &#8599;</a>
 	</div>
 	{{#if insecure}}
 	<p class="text-warning" style="margin-bottom: 8px;">
@@ -10,7 +10,7 @@
 		Serve Grafana over https and update the plugin settings. The link above still works.
 	</p>
 	{{/if}}
-	<iframe src="{{embedUrl}}" title="vme-insight: {{title}}" width="100%" height="{{height}}"
+	<iframe src="{{embedUrl}}"{{#if match}} data-vme-insight-theme="morpheus"{{/if}} title="vme-insight: {{title}}" width="100%" height="{{height}}"
 		frameborder="0" loading="lazy" referrerpolicy="no-referrer"
 		style="width: 100%; border: 0; display: block;"></iframe>
 	<p class="text-muted" style="margin-top: 6px; font-size: 12px;">

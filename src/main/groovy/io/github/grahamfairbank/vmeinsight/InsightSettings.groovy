@@ -23,6 +23,10 @@ class InsightSettings {
 	static final String REQUIRE_PERMISSION = 'requirePermission'
 	static final String SHOW_LAUNCHER = 'showLauncher'
 
+	/** Theme setting value that adds no theme= (Grafana's default, or the viewer's own preference). */
+	static final String THEME_DEFAULT = 'default'
+	/** Theme setting value: follow each viewer's Morpheus theme (the browser script picks light or dark). */
+	static final String THEME_MORPHEUS = 'morpheus'
 	static final int DEFAULT_TAB_HEIGHT = 1400
 	/** vme-insight's tiles-for-embedding dashboard (0.2.0+). Its panel ids never change. */
 	static final String WIDGET_DASHBOARD = 'vme-widget'
@@ -35,6 +39,8 @@ class InsightSettings {
 	final String baseUrl
 	final Long orgId
 	final String theme
+	/** True when frames should follow the viewer's Morpheus theme; theme is then null. */
+	final boolean matchMorpheusTheme
 	final int tabHeight
 	final List<Integer> widgetPanels
 	final Set<String> hostTypeCodes
@@ -48,6 +54,7 @@ class InsightSettings {
 		orgId = positiveLong(str(s[ORG_ID]))
 		String t = str(s[THEME])?.toLowerCase()
 		theme = (t in ['light', 'dark']) ? t : null
+		matchMorpheusTheme = t == THEME_MORPHEUS
 		Long h = positiveLong(str(s[TAB_HEIGHT]))
 		tabHeight = (h != null && h >= 300 && h <= 10000) ? h.intValue() : DEFAULT_TAB_HEIGHT
 		String panels = str(s[WIDGET_PANELS])

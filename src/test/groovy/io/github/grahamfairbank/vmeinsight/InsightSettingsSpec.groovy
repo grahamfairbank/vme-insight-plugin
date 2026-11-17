@@ -48,6 +48,32 @@ class InsightSettingsSpec extends Specification {
 		s.widgetPanelUrls()[0] == 'https://g/d-solo/vme-widget?panelId=1&orgId=2&theme=dark'
 	}
 
+	def "the theme dropdown's Grafana default (and blank) add no theme"() {
+		expect:
+		InsightSettings.fromJson("{\"grafanaUrl\":\"https://g\",\"grafanaTheme\":\"${v}\"}").theme == null
+		InsightSettings.fromJson('{"grafanaUrl":"https://g","grafanaTheme":"default"}').hostDashboard(7L) == 'https://g/d/vme-hosts?var-host=7&kiosk'
+
+		where:
+		v << ['default', '']
+	}
+
+	def "matching the Morpheus theme adds no theme= on the server side"() {
+		when:
+		def s = InsightSettings.fromJson('{"grafanaUrl":"https://g","grafanaTheme":"Morpheus"}')
+
+		then:
+		s.matchMorpheusTheme
+		s.theme == null
+		s.hostDashboard(7L) == 'https://g/d/vme-hosts?var-host=7&kiosk'
+		!InsightSettings.fromJson('{"grafanaUrl":"https://g","grafanaTheme":"dark"}').matchMorpheusTheme
+	}
+
+	def "every theme dropdown choice is a value the settings accept"() {
+		expect:
+		VmeInsightOptionSourceProvider.THEME_CHOICES*.value == [InsightSettings.THEME_MORPHEUS, InsightSettings.THEME_DEFAULT, 'light', 'dark']
+		InsightSettings.fromJson('{"grafanaUrl":"https://g","grafanaTheme":"light"}').theme == 'light'
+	}
+
 	def "bad theme, org and height values fall back to defaults"() {
 		given:
 		def s = InsightSettings.fromJson('{"grafanaUrl":"http://g:3000","grafanaOrgId":"x","grafanaTheme":"blue","tabHeight":"50"}')

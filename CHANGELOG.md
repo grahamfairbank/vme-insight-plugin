@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased (0.1.6)
+
+* **Grafana theme is now a list**, with a new default: **Match each user's Morpheus theme**. Each user sees the vme-insight tabs and home dashboard tiles in light or dark to match their own Morpheus theme (User Settings → Theme). **Light**, **Dark** and **Grafana default** are still there. Saved settings carry over. See [CONFIGURATION: Matching the Morpheus theme](docs/CONFIGURATION.md#matching-the-morpheus-theme).
+
 ## 0.1.5 (2026-10-26)
 
 * The note under each tab links to the [troubleshooting guide](docs/TROUBLESHOOTING.md) on GitHub (opens in a new tab), instead of only naming it.

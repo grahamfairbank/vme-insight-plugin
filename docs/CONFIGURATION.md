@@ -8,7 +8,7 @@ All settings are on **Administration → Integrations → Plugins → vme-insigh
 |---|---|---|
 | **vme-insight Grafana URL** | *(blank)* | Base URL of vme-insight's Grafana **as users' browsers reach it**, the same address as vme-insight's `GRAFANA_ROOT_URL` (a name is better than an IP), e.g. `https://vme-insight.example.com` or `https://tools.example.com/grafana`. Include the port unless it's 443: `https://vme-insight.example.com:3443`. The plugin allows frames only from this exact address and port, so if vme-insight's https port changes (the vme-insight appliance offers 443 or 3443), change this setting at the same time. Must start with `https://` (or `http://`, which browsers block inside VME; the tab then shows a warning). Blank, or anything that isn't a plain http(s) URL, hides every tab, the widget content and the corner link. |
 | **Grafana organization ID** | *(blank)* | Adds `orgId=<n>` to every URL. Set it when anonymous viewers use a dedicated organization ([AUTH](AUTH.md#recommended-setup)). |
-| **Grafana theme** | *(blank)* | `light` or `dark` forces that theme in the frames. Blank uses Grafana's default (or the viewer's preference). |
+| **Grafana theme** | **Match each user's Morpheus theme** (new installs) | A list. **Match each user's Morpheus theme** shows each user the frames in light or dark to match the theme they picked in Morpheus **User Settings → Theme**. **Light** or **Dark** forces that theme for everyone. **Grafana default** uses Grafana's own setting. Settings saved by 0.1.5 or earlier carry over: `light` and `dark` stay as they were, and blank means Grafana default. See [below](#matching-the-morpheus-theme). |
 | **Tab height (pixels)** | `1400` | Height of the frame in each tab, 300 to 10000. The dashboard scrolls inside it. |
 | **Home dashboard panel IDs** | `1,2,3,4,7,8,9,12` | Tiles from vme-insight's **VME Summary tiles** dashboard (`vme-widget`) to show in the home dashboard widget, in order. See [below](#home-dashboard-panel-ids). |
 | **Treat as hosts** | *(blank)* | Server type codes that always open the **VME Hosts** dashboard. Copy vme-insight's `classification.host_type_codes`. |
@@ -59,3 +59,11 @@ Plugin 0.1.0 and 0.1.1 used ids from the VME Overview dashboard instead. A saved
 | Anonymous Viewer, https, network restriction | Yes, see vme-insight's [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md). |
 | `config.yaml`: `morpheus.url` | Must be the same VME manager the plugin is installed on, or the ids won't match. |
 | `config.yaml`: `classification` | Copy any overrides to **Treat as hosts** / **Treat as VMs**. |
+
+## Matching the Morpheus theme
+
+Morpheus doesn't tell plugins which theme a user picked, so the plugin works it out in the browser. With **Match each user's Morpheus theme** selected, a small script (`vme-insight-theme.js`) loads on every Morpheus page for users who can see vme-insight. When a vme-insight tab or the home dashboard widget appears, the script checks how dark the page is behind the frame and adds `theme=dark` or `theme=light` to the frame and to the **Open in vme-insight** link.
+
+* A user who changes their Morpheus theme sees the new theme in vme-insight on the next page load.
+* With white-labeling on, Morpheus hides the Theme setting; the script still follows whatever background the white-label theme uses.
+* If the script can't load, the frames show Grafana's default theme.

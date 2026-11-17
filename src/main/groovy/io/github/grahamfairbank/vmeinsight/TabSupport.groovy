@@ -32,7 +32,8 @@ class TabSupport {
 			openUrl  : openUrl,
 			height   : settings.tabHeight,
 			insecure : settings.insecureUrl,
-			grafana  : settings.baseUrl
+			grafana  : settings.baseUrl,
+			match    : settings.matchMorpheusTheme
 		]
 		return renderer.renderTemplate('hbs/grafana-tab', model)
 	}

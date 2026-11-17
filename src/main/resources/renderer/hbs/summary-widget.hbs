@@ -2,7 +2,7 @@
 <div id="dashboard-item-vme-insight-summary" class="vme-insight-widget" style="width: 100%; box-sizing: border-box;">
 	<div class="dashboard-widget-header" style="display: flex; justify-content: space-between; align-items: baseline;">
 		<span class="dashboard-widget-title">vme-insight</span>
-		{{#if configured}}<a href="{{openUrl}}" target="_blank" rel="noopener noreferrer">Open &#8599;</a>{{/if}}
+		{{#if configured}}<a href="{{openUrl}}"{{#if match}} data-vme-insight-theme="morpheus"{{/if}} target="_blank" rel="noopener noreferrer">Open &#8599;</a>{{/if}}
 	</div>
 	{{#if configured}}
 		{{#if insecure}}
@@ -10,7 +10,7 @@
 		{{/if}}
 		<div style="display: flex; flex-wrap: wrap; gap: 6px;">
 			{{#each panels}}
-			<iframe src="{{this}}" title="vme-insight panel" width="220" height="130" frameborder="0" loading="lazy"
+			<iframe src="{{this}}"{{#if ../match}} data-vme-insight-theme="morpheus"{{/if}} title="vme-insight panel" width="220" height="130" frameborder="0" loading="lazy"
 				referrerpolicy="no-referrer" style="flex: 1 1 200px; min-width: 180px; height: 130px; border: 0;"></iframe>
 			{{/each}}
 		</div>

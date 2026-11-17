@@ -63,7 +63,8 @@ class VmeInsightDashboardItemProvider extends AbstractDashboardItemTypeProvider 
 			configured: s.configured,
 			insecure  : s.insecureUrl,
 			panels    : s.widgetPanelUrls(),
-			openUrl   : s.overviewDashboard()
+			openUrl   : s.overviewDashboard(),
+			match     : s.matchMorpheusTheme
 		]
 		model.opts = opts
 		return renderer.renderTemplate('hbs/summary-widget', model)
