@@ -6,7 +6,7 @@ A small **HPE Morpheus VM Essentials (VME)** UI plugin that shows [vme-insight](
 
 **Setup guide:** vme-insight's [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md) covers everything, in order, for both projects.
 
-**Supported:** VME 9.1 and later (Plugin API 1.5.0), with vme-insight 0.2.0 or later. See [Compatibility](#compatibility).
+**Supported:** HPE Morpheus 9.0 and later (built with Plugin API 1.5.0), with vme-insight 0.2.0 or later. See [Compatibility](#compatibility).
 
 > **Community project.** vme-insight-plugin is independent and community maintained. It is not affiliated with, endorsed, sponsored or supported by Hewlett Packard Enterprise, Morpheus Data, or any related organization. See the [disclaimer](#disclaimer).
 
@@ -63,7 +63,7 @@ Follow vme-insight's **[VME-PLUGIN](https://github.com/grahamfairbank/vme-insigh
 
 ## Requirements
 
-* **VME 9.1 or later.** 9.1 ships Plugin API 1.5.0, which this plugin is built against ([9.1 compatibility](https://github.com/HewlettPackard/morpheus-docs/blob/dev-9.1/release_notes/compatibility.rst)).
+* **HPE Morpheus 9.0 or later.** The plugin is built against Plugin API 1.5.0 (Morpheus 9.1) and uses nothing that Morpheus 9.0 (Plugin API 1.4.1) lacks; it also compiles against 1.4.1. Tested on 9.0.1 and 9.1.0.1 ([compatibility](https://github.com/HewlettPackard/morpheus-docs/blob/dev-9.1/release_notes/compatibility.rst)). Before 0.1.7, the tabs were blocked on 9.0.x.
 * **vme-insight 0.2.0 or later**, set up as in [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md): Grafana reachable from your users' browsers over **https**, without a sign-in. Browsers block `http://` frames inside VME's `https://` pages.
 * A VME role that can manage plugins (Administration → Integrations) to install it.
 * To build: Docker, or JDK 11+ with the included Gradle wrapper.
@@ -72,7 +72,8 @@ Follow vme-insight's **[VME-PLUGIN](https://github.com/grahamfairbank/vme-insigh
 
 | vme-insight-plugin | vme-insight | VME |
 |---|---|---|
-| 0.1.6 | 0.2.0 or later (tested with 0.7.0) | 9.1 or later |
+| 0.1.7 | 0.2.0 or later (tested with 0.7.1) | 9.0 or later (tested on 9.0.1 and 9.1.0.1) |
+| 0.1.6 | 0.2.0 or later (tested with 0.7.0) | 9.1 or later (installs on 9.0.x, but the tabs are blocked) |
 | 0.1.5 | 0.2.0 or later | 9.1 or later |
 | 0.1.4 | 0.2.0 or later | 9.1 or later |
 | 0.1.3 | 0.2.0 or later (tested with 0.4.4) | 9.1 or later |
@@ -85,7 +86,8 @@ Upgrade vme-insight first when a plugin release needs a newer one. Each release 
 
 | Component | Version | Status |
 |---|---|---|
-| VME manager | 9.1.0.1 | Installed (plugin 0.1.6; the Grafana theme follows each user's Morpheus theme, light and dark). Host, VM, instance and cluster tabs show the right dashboard; the frame is allowed by the plugin's `frame-src`; the dashboard is offered in **Dashboards to Display**. |
+| Morpheus | 9.0.1 | Installed (plugin 0.1.7): host, VM, instance and cluster tabs show Grafana; the frame is allowed by the plugin's `frame-src`. |
+| Morpheus | 9.1.0.1 | Installed (plugin 0.1.7; the Grafana theme follows each user's Morpheus theme, light and dark). Host, VM, instance and cluster tabs show the right dashboard; the frame is allowed by the plugin's `frame-src`; the dashboard is offered in **Dashboards to Display**. |
 | Plugin API (`morpheus-plugin-api`) | 1.5.0 | Builds; unit tests pass |
 | vme-insight | 0.2.0, 0.4.4, 0.7.0 | Dashboard uids and variables (`vme-hosts`/`var-host`, `vme-vms`/`var-vm`, `vme-overview`/`var-cluster`) and `vme-widget` tiles checked |
 | Grafana | 11.5.2 (as shipped by vme-insight) | Host, VM, cluster and single-panel URLs render in a cross-site frame with anonymous Viewer access behind vme-insight's https front end |

@@ -8,7 +8,7 @@ This page covers what is specific to the plugin: building it, upgrading and remo
 
 | | |
 |---|---|
-| VME | 9.1 or later (Plugin API 1.5.0). Older managers refuse the plugin (`Morpheus-Min-Appliance-Version: 9.1.0`). |
+| HPE Morpheus | 9.0 or later (`Morpheus-Min-Appliance-Version: 9.0.0`). Plugin 0.1.6 and earlier declared 9.1.0: Morpheus 9.0.x installs them, but blocks their tabs. |
 | vme-insight | 0.2.0 or later, set up as in [VME-PLUGIN](https://github.com/grahamfairbank/vme-insight/blob/main/docs/VME-PLUGIN.md), collecting from the same VME manager. See [Compatibility](../README.md#compatibility). |
 | To install | A VME user with **Administration: Integrations** rights |
 | To build | Docker, or JDK 11+ (the Gradle wrapper is included) |

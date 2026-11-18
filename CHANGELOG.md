@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.7 (2026-11-18)
+
+* **Works on HPE Morpheus 9.0.x.** On a Morpheus 9.0.1 appliance, every vme-insight tab showed "This content is blocked". The plugin declared Morpheus 9.1.0 as its minimum version. Morpheus 9.0.1 installed it and drew its tabs anyway, but left the plugin's `frame-src` out of the page's Content-Security-Policy, so the browser blocked Grafana's frame. The minimum is now 9.0.0. Nothing else changes, and saved settings carry over.
+* Tested on Morpheus 9.0.1 and 9.1.0.1.
+
 ## 0.1.6 (2026-11-17)
 
 * **Grafana theme is now a list**, with a new default: **Match each user's Morpheus theme**. Each user sees the vme-insight tabs and home dashboard tiles in light or dark to match their own Morpheus theme (User Settings → Theme). **Light**, **Dark** and **Grafana default** are still there. Saved settings carry over. See [CONFIGURATION: Matching the Morpheus theme](docs/CONFIGURATION.md#matching-the-morpheus-theme).

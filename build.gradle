@@ -75,7 +75,7 @@ jar {
 			'Morpheus-Logo-Dark': 'assets/vme-insight.svg',
 			'Morpheus-Labels': 'Plugin, Monitoring, Grafana, Dashboard, Tab',
 			'Morpheus-Repo': 'https://github.com/grahamfairbank/vme-insight-plugin',
-			'Morpheus-Min-Appliance-Version': '9.1.0'
+			'Morpheus-Min-Appliance-Version': '9.0.0'
 		)
 	}
 }

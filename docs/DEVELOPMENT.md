@@ -44,7 +44,9 @@ Classes target Java 11, matching `morpheus-plugin-api` 1.5.0. Everything VME alr
 | `shadowVersion` | `8.1.1` | Same as morpheus-plugin-core |
 | `assetPipelineVersion` | `4.4.0` | Same as morpheus-plugin-core |
 
-For a later VME release, check its Plugin API version in that release's notes, set `morphPluginApiVersion` and `Morpheus-Min-Appliance-Version` (in `build.gradle`) to match, rebuild and retest.
+For a later Morpheus release, check its Plugin API version in that release's notes, set `morphPluginApiVersion` to match, rebuild and retest.
+
+Keep `Morpheus-Min-Appliance-Version` (in `build.gradle`) at the **oldest Morpheus release the plugin supports** (now 9.0.0), not the one it is built for. Morpheus doesn't refuse a plugin whose minimum is newer than itself. It installs it and draws its tabs, but leaves the plugin's Content-Security-Policy out of the page. With 9.1.0 declared, Morpheus 9.0.1 blocked every tab's frame (found in 0.1.6, fixed in 0.1.7).
 
 ## The VME APIs used
 
